@@ -86,6 +86,7 @@ local_settings.py
 .env
 
 # frontend
+frontend/
 node_modules/
 public/
 *.json

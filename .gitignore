@@ -5,6 +5,8 @@
 # Icon must end with two \r
 Icon
 
+# IDE
+.idea/
 
 # Thumbnails
 ._*
@@ -31,6 +33,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+venv/
 env/
 build/
 develop-eggs/

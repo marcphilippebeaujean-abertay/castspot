@@ -11,3 +11,9 @@ class CollaborationRequest(models.Model):
     sender = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='req_sender')
     receiver = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='req_receiver')
 
+
+class PublicDetails(models.Model):
+    website_link = models.CharField(max_length=30)
+    linkedin_profile = models.CharField(max_length=30)
+    twitter = models.CharField(max_length=30)
+

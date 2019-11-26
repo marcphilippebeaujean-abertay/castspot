@@ -1,4 +1,4 @@
-"""fourcast_project URL Configuration
+"""castspot_project URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/
@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/', include('rest_framework.urls')),
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('accounts/', include('allauth.urls')),
 ]

@@ -1,4 +1,4 @@
-#!/home/marc/projects/fourcast/venv/bin/python
+#!/home/marc/projects/castspot/venv/bin/python
 from django.core import management
 
 if __name__ == "__main__":

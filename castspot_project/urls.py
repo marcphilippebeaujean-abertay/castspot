@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from frontend.views import index
 
+
 urlpatterns = [
     path('api/', include('users.urls')),
 

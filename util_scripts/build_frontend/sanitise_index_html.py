@@ -18,7 +18,6 @@ with fdopen(fh, 'w') as new_file:
             for x, match in enumerate(re.finditer(pattern, line)):
                 match_index = match.end()
                 text_to_insert = insert_text
-                print(line[match_index])
                 if line[match_index] != "/":
                     text_to_insert += "/"
                 new_line = new_line[:match_index+(x*len(text_to_insert))] + text_to_insert + new_line[match_index+(x*len(text_to_insert)):]

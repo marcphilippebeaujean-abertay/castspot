@@ -19,11 +19,12 @@ from frontend.views import index
 
 urlpatterns = [
     path('api/', include('users.urls')),
-    re_path(r'^(?:.*)/?$', index, name="index"),
 
     path('admin/', admin.site.urls),
     path('api/', include('rest_framework.urls')),
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
+
+    re_path(r'^(?:.*)/?$', index, name="index"),
     path('accounts/', include('allauth.urls')),
 ]

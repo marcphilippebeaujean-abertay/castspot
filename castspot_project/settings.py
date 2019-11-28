@@ -22,6 +22,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
+    'frontend.apps.FrontendConfig',
+    'users.apps.UsersConfig',
+    'publications.apps.PublicationsConfig',
+
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -30,10 +34,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'corsheaders',
-
-    'frontend.apps.FrontendConfig',
-    'users.apps.UsersConfig',
-    'publications.apps.PublicationsConfig',
 ]
 # Application definition
 

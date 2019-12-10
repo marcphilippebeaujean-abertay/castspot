@@ -1,7 +1,8 @@
-from django.urls import include, path
-from .api import UserApiView
+from django.urls import path
+from django.conf.urls import url
+from .api import UserApiView, profile_api_view
 
 
 urlpatterns = [
-    path('users/', UserApiView.as_view()),
+    url('profile/', profile_api_view)
 ]

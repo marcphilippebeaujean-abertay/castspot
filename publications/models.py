@@ -15,4 +15,3 @@ class Comment(Publication):
 
 class CollaborationBoardPost(Publication):
     title = models.CharField(max_length=30)
-

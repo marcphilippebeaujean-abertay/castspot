@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'publications.apps.PublicationsConfig',
 
+    'annoying',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
@@ -114,7 +115,7 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'beaucast',
+        'NAME': 'castspot',
         'USER': 'root',
         'PASSWORD': 'password',
         'HOST': '127.0.0.1',

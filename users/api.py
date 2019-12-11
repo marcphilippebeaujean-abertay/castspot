@@ -1,26 +1,21 @@
-from rest_framework import generics
-from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.contrib.auth.models import User
 
-from .serializers import UserProfileSerializer, UserSerializer
+from .serializers import UserProfileSerializer
 from .models import Profile
+from .permissions import IsOwnerReadOnly
 
 
-class UserApiView(generics.RetrieveAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+class ProfileView(APIView):
+    permission_classes = (IsOwnerReadOnly,)
 
-
-@api_view(['GET'])
-def profile_api_view(request):
-    if request.method == 'GET':
-        # TODO get the real username from the request
-        username = request.data.get('username')
-        profile_owner = User.objects.get(username='testuser')
+    def get(self, request):
+        if 'username' not in request.GET:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        profile_owner = User.objects.get(username=request.GET.get('username', ''))
         profile, _ = Profile.objects.get_or_create(pk=profile_owner.id)
-        profile_serialized = UserProfileSerializer(profile)
-        return Response(profile_serialized.data)
-    return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+        serializer = UserProfileSerializer(profile)
+        return Response(serializer.data, status=201)
 

@@ -5,17 +5,21 @@ from django.contrib.auth.models import User
 
 from .serializers import UserProfileSerializer
 from .models import Profile
-from .permissions import IsOwnerReadOnly
+from .permissions import IsOwnerOnly
 
 
 class ProfileView(APIView):
-    permission_classes = (IsOwnerReadOnly,)
+    permission_classes = (IsOwnerOnly,)
 
     def get(self, request):
         if 'username' not in request.GET:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        profile_owner = User.objects.get(username=request.GET.get('username', ''))
+        try:
+            profile_owner = User.objects.get(username=request.GET.get('username', ''))
+        except User.DoesNotExist:
+            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
         profile, _ = Profile.objects.get_or_create(pk=profile_owner.id)
+        self.check_object_permissions(request, profile)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data, status=201)
 

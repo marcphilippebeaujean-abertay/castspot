@@ -25,6 +25,6 @@ urlpatterns = [
     path('api/', include('rest_framework.urls')),
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
-    re_path(r'^(?!api)', index, name="index"), # serve index.html
+    re_path(r'^(?!api)', index, name="index"),  # serve index.html
     path('accounts/', include('allauth.urls')),
 ]

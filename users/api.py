@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework import permissions
 from django.contrib.auth.models import User
 
 from .serializers import UserProfileSerializer
@@ -9,7 +10,7 @@ from .permissions import IsOwnerOnly
 
 
 class ProfileView(APIView):
-    permission_classes = (IsOwnerOnly,)
+    permission_classes = (permissions.IsAuthenticated, IsOwnerOnly)
 
     def get(self, request):
         if 'username' not in request.GET:
@@ -22,4 +23,3 @@ class ProfileView(APIView):
         self.check_object_permissions(request, profile)
         serializer = UserProfileSerializer(profile)
         return Response(serializer.data, status=201)
-

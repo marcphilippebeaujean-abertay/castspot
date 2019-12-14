@@ -4,12 +4,12 @@ from rest_framework import status
 from rest_framework import permissions
 from django.contrib.auth.models import User
 
-from .serializers import UserProfileSerializer
+from .serializers import AccountDetailsSerializer
 from .models import Profile
 from .permissions import IsOwnerOnly
 
 
-class ProfileView(APIView):
+class AccountDetailsView(APIView):
     permission_classes = (permissions.IsAuthenticated, IsOwnerOnly)
 
     def get(self, request):
@@ -18,8 +18,8 @@ class ProfileView(APIView):
         try:
             profile_owner = User.objects.get(username=request.GET.get('username', ''))
         except User.DoesNotExist:
-            return Response({'error': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         profile, _ = Profile.objects.get_or_create(pk=profile_owner.id)
         self.check_object_permissions(request, profile)
-        serializer = UserProfileSerializer(profile)
-        return Response(serializer.data, status=201)
+        serializer = AccountDetailsSerializer(profile)
+        return Response(serializer.data, status=200)

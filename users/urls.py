@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from .api import ProfileView
+from .api import AccountDetailsView
 
 
 urlpatterns = [
-    url('profile/', ProfileView.as_view())
+    url('account_details/', AccountDetailsView.as_view())
 ]

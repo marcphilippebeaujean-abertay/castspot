@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['username', 'first_name', 'last_name', 'email']
 
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class AccountDetailsSerializer(serializers.ModelSerializer):
     owner = UserSerializer(many=False, read_only=True)
 
     class Meta:

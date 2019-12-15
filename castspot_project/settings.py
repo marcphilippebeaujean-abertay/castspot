@@ -63,9 +63,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'castspot_project.urls'
 
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
-    # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
@@ -74,7 +72,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny'
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        #'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.TokenAuthentication',
     ]
 }
@@ -146,3 +143,5 @@ USE_TZ = True
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+# Require user to provide old password when changing it
+OLD_PASSWORD_FIELD_ENABLED = True

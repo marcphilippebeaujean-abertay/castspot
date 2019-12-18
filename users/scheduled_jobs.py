@@ -8,8 +8,10 @@ TOKEN_CHECK_INTERVAL_HOURS = 1
 
 
 def delete_expired_auth_tokens():
-    expiration_time = make_aware(datetime.now()) - make_aware(timedelta(hours=TOKEN_LIFETIME_HOURS))
-    DefaultTokenModel.objects.filter(created__lte=expiration_time).delete()
+    expiration_time = make_aware(datetime.now() - timedelta(hours=TOKEN_LIFETIME_HOURS))
+    expired_tokens = DefaultTokenModel.objects.filter(created__lte=expiration_time)
+    for token in expired_tokens:
+        token.delete()
 
 
 def init_jobs():

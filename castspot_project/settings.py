@@ -24,6 +24,7 @@ INSTALLED_APPS = [
 
     'frontend.apps.FrontendConfig',
     'users.apps.UsersConfig',
+    'podcasts.apps.PodcastsConfig',
 
     'rest_framework',
     'rest_auth',
@@ -53,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',

@@ -1,14 +1,14 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from apscheduler.schedulers.background import BackgroundScheduler
 from rest_auth.models import DefaultTokenModel
-from django.utils.timezone import make_aware
+from django.utils import timezone
 
 TOKEN_LIFETIME_HOURS = 8
 TOKEN_CHECK_INTERVAL_HOURS = 1
 
 
 def delete_expired_auth_tokens():
-    expiration_time = make_aware(datetime.now() - timedelta(hours=TOKEN_LIFETIME_HOURS))
+    expiration_time = timezone.now() - timedelta(hours=TOKEN_LIFETIME_HOURS)
     expired_tokens = DefaultTokenModel.objects.filter(created__lte=expiration_time)
     for token in expired_tokens:
         token.delete()

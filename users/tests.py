@@ -2,7 +2,6 @@ from django.test import TestCase
 from rest_auth.models import DefaultTokenModel
 from datetime import datetime, timedelta
 from django.contrib.auth.models import User
-import unittest
 
 from .scheduled_jobs import delete_expired_auth_tokens, TOKEN_LIFETIME_HOURS
 

@@ -56,8 +56,9 @@ class PodcastConfirmationView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         try:
             confirmation_code = request.POST.get('confirmationCode')
-            rss_code_confirmation = PodcastConfirmation.objects \
-                .filter(pending=True).filter(owner=request.user).get(rss_confirmation_code=confirmation_code)
+            rss_code_confirmation = PodcastConfirmation.objects\
+                .filter(pending=True, owner=request.user)\
+                .get(rss_confirmation_code=confirmation_code)
             rss_code_confirmation.pending = False
             rss_code_confirmation.save()
             if rss_code_confirmation.created_at < (timezone.now() - timedelta(hours=2)):
@@ -78,7 +79,7 @@ class UserPodcastView(APIView):
 
     def get(self, request):
         owner = User.objects.get(username=request.user)
-        podcast_confirmation_pending = PodcastConfirmation.objects.filter(owner=owner, pending=True).count() > 0
+        podcast_confirmation_pending = PodcastConfirmation.objects.filter(owner=request.user, pending=True).count() > 0
         resp_data = {'podcast_confirmation_pending': podcast_confirmation_pending,
                      'podcasts': Podcast.objects.filter(owner=owner)}
         return Response(UserPodcastDataSerializer(resp_data).data, status=status.HTTP_200_OK)

@@ -22,7 +22,7 @@ def send_podcast_confirmation_code_email(email, confirmation_code):
               fail_silently=False)
 
 
-def create_podcast_from_pending_confirmation(podcast_confirmation):
+def create_podcast_from_confirmation(podcast_confirmation):
     rss_feed_parser = feedparser.parse(podcast_confirmation.rss_feed_url)
     podcast = Podcast()
     podcast.title = rss_feed_parser.feed.title

@@ -22,4 +22,4 @@ class AccountDetailsView(APIView):
         profile, _ = Profile.objects.get_or_create(pk=profile_owner.id)
         self.check_object_permissions(request, profile)
         serializer = AccountDetailsSerializer(profile)
-        return Response(serializer.data, status=200)
+        return Response(serializer.data, status=status.HTTP_200_OK)

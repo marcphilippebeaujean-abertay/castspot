@@ -9,8 +9,9 @@ from smtplib import SMTPException
 
 import feedparser
 
-from .models import PodcastConfirmation
-from .utils import generate_confirmation_code, send_podcast_confirmation_code_email, create_podcast_from_pending_confirmation
+from .models import PodcastConfirmation, Podcast
+from .utils import generate_confirmation_code, send_podcast_confirmation_code_email, create_podcast_from_confirmation
+from .serializers import UserPodcastDataSerializer
 
 
 class RssFeedConfirmationRequestView(APIView):
@@ -18,6 +19,9 @@ class RssFeedConfirmationRequestView(APIView):
 
     def post(self, request):
         owner = User.objects.get(username=request.user)
+        if Podcast.objects.filter(owner=owner).count() > 0:
+            return Response({'error': 'Exceeded number of podcasts allowed for this account.'},
+                            status=status.HTTP_403_FORBIDDEN)
         if PodcastConfirmation.objects.filter(pending=True).filter(owner=owner).count() > 0:
             return Response({'error': 'You can\'t have more than one podcast confirmation pending at one time'},
                             status=status.HTTP_403_FORBIDDEN)
@@ -32,11 +36,9 @@ class RssFeedConfirmationRequestView(APIView):
 
             send_podcast_confirmation_code_email(email, rss_confirmation_code)
 
-            podcast_confirmation_rss = PodcastConfirmation()
-            podcast_confirmation_rss.rss_feed_url = rss_feed_url
-            podcast_confirmation_rss.owner = owner
-            podcast_confirmation_rss.rss_confirmation_code = rss_confirmation_code
-            podcast_confirmation_rss.save()
+            PodcastConfirmation.objects.create(rss_feed_url=rss_feed_url,
+                                               owner=owner,
+                                               rss_confirmation_code=rss_confirmation_code)
             return Response(status=status.HTTP_200_OK)
         except AttributeError:
             return Response({'error': 'Could not read RSS. Please ensure it is valid and that it contains an email '
@@ -46,7 +48,7 @@ class RssFeedConfirmationRequestView(APIView):
                                       'rss feed is valid'}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class PodcastView(APIView):
+class PodcastConfirmationView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
@@ -61,7 +63,7 @@ class PodcastView(APIView):
             if rss_code_confirmation.created_at < (timezone.now() - timedelta(hours=2)):
                 return Response({'error': 'Code invalid'}, status=status.HTTP_400_BAD_REQUEST)
             else:
-                create_podcast_from_pending_confirmation(rss_code_confirmation)
+                create_podcast_from_confirmation(rss_code_confirmation)
             return Response(status=status.HTTP_200_OK)
         except AttributeError:
             return Response({'error': 'Could not read podcast RSS. Please ensure it is valid and resubmit. It should'
@@ -69,3 +71,14 @@ class PodcastView(APIView):
                             status=status.HTTP_400_BAD_REQUEST)
         except PodcastConfirmation.DoesNotExist:
             return Response({'error': 'Code invalid'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserPodcastView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        owner = User.objects.get(username=request.user)
+        podcast_confirmation_pending = PodcastConfirmation.objects.filter(owner=owner, pending=True).count() > 0
+        resp_data = {'podcast_confirmation_pending': podcast_confirmation_pending,
+                     'podcasts': Podcast.objects.filter(owner=owner)}
+        return Response(UserPodcastDataSerializer(resp_data).data, status=status.HTTP_200_OK)

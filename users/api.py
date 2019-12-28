@@ -6,17 +6,14 @@ from django.contrib.auth.models import User
 
 from .serializers import AccountDetailsSerializer
 from .models import Profile
-from .permissions import IsOwnerOnly
 
 
 class AccountDetailsView(APIView):
-    permission_classes = (permissions.IsAuthenticated, IsOwnerOnly)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
-        if 'username' not in request.GET:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
         try:
-            profile_owner = User.objects.get(username=request.GET.get('username', ''))
+            profile_owner = User.objects.get(username=request.user)
         except User.DoesNotExist:
             return Response({'error': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
         profile, _ = Profile.objects.get_or_create(pk=profile_owner.id)

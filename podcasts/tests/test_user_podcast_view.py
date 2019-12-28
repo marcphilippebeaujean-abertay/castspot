@@ -10,7 +10,7 @@ from podcasts.models import PodcastConfirmation, Podcast
 JUNIOR_DEV_PODCAST_FEED_URL = 'https://feed.podbean.com/juniordevcast/feed.xml'
 
 
-class TestMyPodcastView(TestCase):
+class TestUserPodcastView(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(username="donald")
@@ -37,3 +37,4 @@ class TestMyPodcastView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['podcasts']), 1)
         self.assertEqual(response.data['podcasts'][0]['title'], 'Awesomecast')
+        self.assertFalse(response.data['podcast_confirmation_pending'])

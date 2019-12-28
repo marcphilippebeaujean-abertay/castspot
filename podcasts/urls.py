@@ -4,6 +4,7 @@ from .api import PodcastConfirmationView, RssFeedConfirmationRequestView, UserPo
 
 urlpatterns = [
     url('rss-feed-confirmation/', RssFeedConfirmationRequestView.as_view()),
-    url('podcast/', PodcastConfirmationView.as_view()),
-    url('user-podcast/', UserPodcastView.as_view())
+    url(r'podcast-user-data/', UserPodcastView.as_view()),
+    url(r'podcast-confirmation/', PodcastConfirmationView.as_view()),
 ]
+

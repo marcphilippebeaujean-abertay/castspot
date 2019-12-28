@@ -40,12 +40,12 @@ class TestAccountDetailsView(TestCase):
         self.request_url = '/api/account-details/'
 
     def not_authorized(self):
-        request = self.factory.get(self.request_url, {'username': self.username}, format='json')
+        request = self.factory.get(self.request_url, {}, format='json')
         response = self.view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def get_user_dont_exist(self):
-        request = self.factory.get(self.request_url, {'username': self.username}, format='json')
+        request = self.factory.get(self.request_url, {}, format='json')
         force_authenticate(request, user=self.user)
         response = self.view(request)
         self.assertContains(response.data, 'owner')

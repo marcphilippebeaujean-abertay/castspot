@@ -8,7 +8,7 @@ from .models import Podcast
 
 def generate_confirmation_code():
     letters_and_digits = string.ascii_letters + string.digits
-    return ''.join(random.choice(letters_and_digits) for i in range(8))
+    return ''.join(random.choice(letters_and_digits) for i in range(8)).upper()
 
 
 def send_podcast_confirmation_code_email(email, confirmation_code):
@@ -30,3 +30,4 @@ def create_podcast_from_confirmation(podcast_confirmation):
     podcast.description = rss_feed_parser.feed.summary
     podcast.owner = podcast_confirmation.owner
     podcast.save()
+    return podcast

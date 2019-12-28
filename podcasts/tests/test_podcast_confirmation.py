@@ -51,6 +51,8 @@ class TestPodcastView(TestCase):
         self.assertEqual(podcast.title, 'The Junior Developer Podcast')
         self.assertEqual(podcast.image_link,
                          'https://pbcdn1.podbean.com/imglogo/image-logo/6716031/junior-dev-podcast-logo-revamp-big.png')
+        self.assertEqual(podcast.title, response.data['title'])
+        self.assertEqual(podcast.image_link, response.data['image_link'])
 
     def test_expired_confirmation_token(self):
         confirmation = PodcastConfirmation(owner=self.user, rss_feed_url=JUNIOR_DEV_PODCAST_FEED_URL,

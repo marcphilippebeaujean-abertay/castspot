@@ -16,3 +16,4 @@ class Podcast(models.Model):
     description = models.CharField(max_length=500)
     image_link = models.CharField(max_length=300)
     site_link = models.CharField(max_length=500)
+    confirmation = models.OneToOneField(PodcastConfirmation, on_delete=models.CASCADE)

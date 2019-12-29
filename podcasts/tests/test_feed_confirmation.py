@@ -52,7 +52,9 @@ class TestRssFeedConfirmationRequest(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_podcast_limit_succeeded(self):
-        Podcast.objects.create(owner=self.user)
+        PodcastConfirmation.objects.create(owner=self.user)
+        podcast_confirmation = PodcastConfirmation.objects.filter(owner=self.user)[0]
+        Podcast.objects.create(owner=self.user, confirmation=podcast_confirmation)
         request = self.factory.post(self.request_url, self.invalid_feed_data, format='json')
         force_authenticate(request, user=self.user)
         response = self.view(request)

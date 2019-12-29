@@ -29,7 +29,11 @@ class TestUserPodcastView(TestCase):
         self.assertTrue(response.data['podcast_confirmation_pending'])
 
     def test_has_confirmed_podcast_no_confirmation(self):
-        Podcast.objects.create(owner=self.user, title='Awesomecast')
+        PodcastConfirmation.objects.create(owner=self.user, rss_feed_url='helloworld')
+        podcast_confirm = PodcastConfirmation.objects.filter(owner=self.user)[0]
+        podcast_confirm.pending = False
+        podcast_confirm.save()
+        Podcast.objects.create(owner=self.user, title='Awesomecast', confirmation=podcast_confirm)
 
         request = self.factory.get(self.request_url)
         force_authenticate(request, user=self.user)
@@ -37,4 +41,5 @@ class TestUserPodcastView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['podcasts']), 1)
         self.assertEqual(response.data['podcasts'][0]['title'], 'Awesomecast')
+        self.assertEqual(response.data['podcasts'][0]['confirmation']['rss_feed_url'], 'helloworld')
         self.assertFalse(response.data['podcast_confirmation_pending'])

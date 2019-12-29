@@ -29,5 +29,6 @@ def create_podcast_from_confirmation(podcast_confirmation):
     podcast.image_link = rss_feed_parser.feed.image.href
     podcast.description = rss_feed_parser.feed.summary
     podcast.owner = podcast_confirmation.owner
+    podcast.confirmation = podcast_confirmation
     podcast.save()
     return podcast

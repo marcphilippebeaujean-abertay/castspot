@@ -12,7 +12,7 @@ from podcasts.models import PodcastConfirmation, Podcast
 JUNIOR_DEV_PODCAST_FEED_URL = 'https://feed.podbean.com/juniordevcast/feed.xml'
 
 
-class TestPodcastView(TestCase):
+class TestPodcastConfirmation(TestCase):
 
     def setUp(self):
         self.user = User.objects.create(username="donald")

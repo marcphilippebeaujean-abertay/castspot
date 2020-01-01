@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, ContactDetails
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -15,3 +15,9 @@ class AccountDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = ('owner', 'bio')
+
+
+class ContactDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactDetails
+        fields = ('email', 'discord', 'skype')

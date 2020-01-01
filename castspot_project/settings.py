@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'frontend.apps.FrontendConfig',
     'users.apps.UsersConfig',
     'podcasts.apps.PodcastsConfig',
+    'guest_posting.apps.GuestPostingConfig',
 
     'rest_framework',
     'rest_auth',

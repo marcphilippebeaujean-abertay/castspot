@@ -7,6 +7,7 @@ from frontend.views import index
 urlpatterns = [
     path('api/', include('users.urls')),
     path('api/', include('podcasts.urls')),
+    path('api/', include('guest_posting.urls')),
     re_path(r'^(?!api)', index, name="index"),  # serve index.html
 
     path('admin/', admin.site.urls),

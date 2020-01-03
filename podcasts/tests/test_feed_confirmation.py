@@ -37,7 +37,7 @@ class TestRssFeedConfirmationRequest(TestCase):
         request = self.factory.post(self.request_url, {}, format='json')
         force_authenticate(request, user=self.user)
         response = self.view(request)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     def test_valid_podcast_rss_feed(self):
         request = self.factory.post(self.request_url, self.valid_feed_data, format='json')

@@ -1,6 +1,5 @@
-from rest_framework import exceptions, viewsets
-
-from podcasts.models import Podcast
+from rest_framework import exceptions, viewsets, status
+from rest_framework.response import Response
 
 from .models import GuestPost
 from .serializers import GuestPostSerializer
@@ -10,17 +9,12 @@ from .pagination import GuestPostPagination
 
 class GuestPostViewSet(viewsets.ViewSet,
                        viewsets.generics.ListCreateAPIView,
-                       viewsets.mixins.RetrieveModelMixin,
-                       viewsets.mixins.UpdateModelMixin):
+                       viewsets.mixins.UpdateModelMixin,
+                       viewsets.mixins.RetrieveModelMixin):
     permission_classes = (GuestPostPermissions,)
     serializer_class = GuestPostSerializer
     queryset = GuestPost.objects.all()
     pagination_class = GuestPostPagination
-
-    def perform_create(self, serializer):
-        GuestPost.objects.create(heading=self.request.data['heading'], description=self.request.data['description'],
-                                 podcast=Podcast.objects.get(title=self.request.data['podcast_title']),
-                                 owner=self.request.user)
 
     def list(self, request, *args, **kwargs):
         filter_qs = GuestPost.objects.order_by('created_at')
@@ -41,3 +35,4 @@ class GuestPostViewSet(viewsets.ViewSet,
             return self.get_paginated_response(data)
         raise exceptions.NotFound('This page of guest postings could not be found.')
 
+    # TODO: implement working update

@@ -32,7 +32,7 @@ class TestPodcastConfirmation(TestCase):
         request = self.factory.post(self.request_url, {}, format='json')
         force_authenticate(request, user=self.user)
         response = self.view(request)
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
     def test_no_confirmation_code_in_database(self):
         request = self.factory.post(self.request_url, self.valid_confirmation_code_data, format='json')

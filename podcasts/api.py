@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from rest_framework.exceptions import PermissionDenied, ParseError
+from rest_framework.exceptions import PermissionDenied, ParseError, UnsupportedMediaType
 from django.utils import timezone
 from datetime import timedelta
 from smtplib import SMTPException
@@ -22,7 +22,7 @@ class RssFeedConfirmationRequestView(APIView):
         if PodcastConfirmation.objects.filter(pending=True).filter(owner=request.user).count() > 0:
             raise PermissionDenied('You can\'t have more than one podcast confirmation pending at one time')
         if 'rssFeed' not in request.data:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+            raise UnsupportedMediaType('RSS Feed missing')
         rss_feed_url = request.data.get('rssFeed')
         try:
             rss_feed_parser = feedparser.parse(rss_feed_url)
@@ -46,7 +46,7 @@ class PodcastConfirmationView(APIView):
 
     def post(self, request):
         if 'confirmationCode' not in request.data:
-            raise ParseError('Confirmation code missing!')
+            raise UnsupportedMediaType('Confirmation code missing!')
         try:
             confirmation_code = request.data.get('confirmationCode')
             rss_code_confirmation = PodcastConfirmation.objects\

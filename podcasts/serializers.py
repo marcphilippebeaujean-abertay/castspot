@@ -2,18 +2,15 @@ from rest_framework import serializers
 from .models import Podcast, PodcastConfirmation
 
 
-class PodcastConfirmationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PodcastConfirmation
-        fields = ('rss_feed_url',)
-
-
 class PodcastSerializer(serializers.ModelSerializer):
-    confirmation = PodcastConfirmationSerializer(read_only=True)
+    rss_url = serializers.SerializerMethodField()
+
+    def get_rss_url(self, obj):
+        return obj.confirmation.rss_feed_url
 
     class Meta:
         model = Podcast
-        fields = ('title', 'image_link', 'confirmation')
+        fields = ('title', 'image_link', 'rss_url')
 
 
 class UserPodcastDataSerializer(serializers.Serializer):

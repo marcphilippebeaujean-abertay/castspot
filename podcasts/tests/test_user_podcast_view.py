@@ -41,5 +41,5 @@ class TestUserPodcastView(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data['podcasts']), 1)
         self.assertEqual(response.data['podcasts'][0]['title'], 'Awesomecast')
-        self.assertEqual(response.data['podcasts'][0]['confirmation']['rss_feed_url'], 'helloworld')
+        self.assertEqual(response.data['podcasts'][0]['rss_url'], 'helloworld')
         self.assertFalse(response.data['podcast_confirmation_pending'])

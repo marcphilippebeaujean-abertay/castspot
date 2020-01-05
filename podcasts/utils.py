@@ -23,10 +23,6 @@ def send_podcast_confirmation_code_email(email, confirmation_code):
               fail_silently=False)
 
 
-podcast_not_confirmed_error = 'Information in your RSS did not correlate with that of listennotes.com, which is the ' \
-                              'directory we use to validate podcasters. Please check your details are correct'
-
-
 def verify_podcast_with_listen_notes(rss_feed_parser):
     title = rss_feed_parser.feed.title
     email = rss_feed_parser.feed.author_detail.email
@@ -41,4 +37,5 @@ def verify_podcast_with_listen_notes(rss_feed_parser):
         if result['title_original'] == title:
             if result['email'] == email:
                 return
-    raise exceptions.ParseError(podcast_not_confirmed_error)
+    raise exceptions.ParseError('Information in your RSS Feed did not correlate with that of listennotes.com, ' \
+                                'the directory we use to validate podcasters. Please check your details are correct')

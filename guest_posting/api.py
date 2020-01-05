@@ -36,3 +36,5 @@ class GuestPostViewSet(viewsets.ViewSet,
         raise exceptions.NotFound('This page of guest postings could not be found.')
 
     # TODO: implement working update
+
+

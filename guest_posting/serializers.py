@@ -27,7 +27,6 @@ class GuestPostSerializer(serializers.ModelSerializer):
         return GuestPost.objects.create(owner=request.user,
                                         heading=heading,
                                         description=validated_data.get('description', ''),
-                                        only_podcasters_can_apply=validated_data.get('only_podcasters_can_apply', True),
                                         podcast=podcast)
 
     def update(self, instance, validated_data):

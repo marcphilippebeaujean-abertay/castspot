@@ -1,38 +1,33 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
-from rest_framework.exceptions import PermissionDenied, ParseError, UnsupportedMediaType
+from rest_framework.exceptions import ParseError, UnsupportedMediaType
 from django.utils import timezone
 from datetime import timedelta
 from smtplib import SMTPException
-
 import feedparser
 
+from .permissions import AddRssConfirmationPermissions
 from .models import PodcastConfirmation, Podcast
-from .utils import generate_confirmation_code, send_podcast_confirmation_code_email, create_podcast_from_confirmation
+from .utils import send_podcast_confirmation_code_email
 from .serializers import UserPodcastDataSerializer, PodcastSerializer
 
 
 class RssFeedConfirmationRequestView(APIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticated, AddRssConfirmationPermissions)
 
     def post(self, request):
-        if Podcast.objects.filter(owner=request.user).count() > 0:
-            raise PermissionDenied('Exceeded number of podcasts allowed for this account')
-        if PodcastConfirmation.objects.filter(pending=True).filter(owner=request.user).count() > 0:
-            raise PermissionDenied('You can\'t have more than one podcast confirmation pending at one time')
         if 'rssFeed' not in request.data:
             raise UnsupportedMediaType('RSS Feed missing')
         rss_feed_url = request.data.get('rssFeed')
         try:
             rss_feed_parser = feedparser.parse(rss_feed_url)
-            email = rss_feed_parser.feed.author_detail.email
-            rss_confirmation_code = generate_confirmation_code()
-            send_podcast_confirmation_code_email(email, rss_confirmation_code)
 
-            PodcastConfirmation.objects.create(rss_feed_url=rss_feed_url,
-                                               owner=request.user,
-                                               rss_confirmation_code=rss_confirmation_code)
+            confirmation_code = PodcastConfirmation.objects.create(rss_feed_url=rss_feed_url,
+                                                                   owner=request.user).rss_confirmation_code
+
+            email = rss_feed_parser.feed.author_detail.email
+            send_podcast_confirmation_code_email(email, confirmation_code)
             return Response(status=status.HTTP_200_OK)
         except AttributeError:
             raise ParseError('Could not read RSS. Please ensure it is valid and that it contains an email field')
@@ -57,8 +52,12 @@ class PodcastConfirmationView(APIView):
             if rss_code_confirmation.created_at < (timezone.now() - timedelta(hours=2)):
                 raise ParseError('Code invalid')
             else:
-                podcast = create_podcast_from_confirmation(rss_code_confirmation)
-            return Response(PodcastSerializer(podcast).data, status=status.HTTP_200_OK)
+                feed_data = feedparser.parse(rss_code_confirmation.rss_feed_url).feed
+                podcast = Podcast.objects.create(owner=request.user,
+                                                 title=feed_data.title,
+                                                 image_link=feed_data.image.href,
+                                                 confirmation=rss_code_confirmation)
+                return Response(PodcastSerializer(podcast).data, status=status.HTTP_200_OK)
         except AttributeError:
             raise ParseError('Could not read podcast RSS. Please ensure it is valid and resubmit. It should'
                              'contain a title, description/summary and image link.')

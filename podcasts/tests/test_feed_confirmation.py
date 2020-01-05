@@ -44,6 +44,8 @@ class TestRssFeedConfirmationRequest(TestCase):
         force_authenticate(request, user=self.user)
         response = self.view(request)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        rss_feed = PodcastConfirmation.objects.get(rss_feed_url=JUNIOR_DEV_PODCAST_FEED_URL)
+        self.assertEqual(len(rss_feed.rss_confirmation_code), 8)
 
     def test_invalid_podcast_rss_feed(self):
         request = self.factory.post(self.request_url, self.invalid_feed_data, format='json')

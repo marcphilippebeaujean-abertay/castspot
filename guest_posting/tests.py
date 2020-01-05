@@ -19,7 +19,7 @@ class Test(TestCase):
         self.request_url = '/api/guest-posts/'
         self.cali_podcast = Podcast.objects.create(owner=self.user, title="Cali Podcast", image_link='caliimglink',
                                                    confirmation=PodcastConfirmation.objects.create(owner=self.user,
-                                                                                              rss_feed_url='helloword'))
+                                                                                                   rss_feed_url='helloword'))
         troll_podcast = Podcast.objects.create(owner=self.user, title="Troll Podcast", image_link='trollimglink',
                                                confirmation=PodcastConfirmation.objects.create(owner=self.user,
                                                                                                rss_feed_url='hellowrd'))
@@ -96,14 +96,18 @@ class Test(TestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_create_a_post(self):
+        test_user = User.objects.create(username="test_user")
+        test_podcast = Podcast.objects.create(owner=test_user, title="Test Podcast", image_link='caliimglink',
+                                              confirmation=PodcastConfirmation.objects.create(owner=test_user,
+                                                                                              rss_feed_url='helloword'))
         data = {
             'heading': 'Junior Dev in California',
             'description': 'description',
-            'podcast_title': self.cali_podcast.title
+            'podcast_title': test_podcast.title
         }
         request = self.factory.post(self.request_url, data=data)
         view = GuestPostViewSet.as_view({'post': 'create'})
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=test_user)
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data['heading'], 'Junior Dev in California')
@@ -130,7 +134,7 @@ class Test(TestCase):
             'description': 'new description',
         }
         request = self.factory.patch(self.request_url, data=data)
-        view = GuestPostViewSet.as_view({'patch': 'partial_update'})
+        view = GuestPostViewSet.as_view({'patch': 'update'})
         force_authenticate(request, user=self.user)
         response = view(request, pk=self.sample_uuid)
         self.assertEqual(response.status_code, status.HTTP_200_OK)

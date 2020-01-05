@@ -17,7 +17,7 @@ class GuestPostViewSet(viewsets.ViewSet,
     pagination_class = GuestPostPagination
 
     def list(self, request, *args, **kwargs):
-        filter_qs = GuestPost.objects.order_by('created_at')
+        filter_qs = GuestPost.objects.order_by('created_at').reverse()
         if request.GET.get('showUserPosts', False):
             if not request.user.is_authenticated:
                 raise exceptions.NotAuthenticated('You need to be authenticated to view your posts.')

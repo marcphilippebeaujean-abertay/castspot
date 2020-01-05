@@ -1,12 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from .utils import generate_confirmation_code
+
 
 class PodcastConfirmation(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     rss_feed_url = models.CharField(max_length=300)
-    rss_confirmation_code = models.CharField(max_length=8)
+    rss_confirmation_code = models.CharField(max_length=8, default=generate_confirmation_code)
     pending = models.BooleanField(default=True)
 
 

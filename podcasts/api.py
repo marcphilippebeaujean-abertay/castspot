@@ -9,7 +9,7 @@ import feedparser
 
 from .permissions import AddRssConfirmationPermissions
 from .models import PodcastConfirmation, Podcast
-from .utils import send_podcast_confirmation_code_email
+from .utils import send_podcast_confirmation_code_email, verify_podcast_with_listen_notes
 from .serializers import UserPodcastDataSerializer, PodcastSerializer
 
 
@@ -22,6 +22,7 @@ class RssFeedConfirmationRequestView(APIView):
         rss_feed_url = request.data.get('rssFeed')
         try:
             rss_feed_parser = feedparser.parse(rss_feed_url)
+            verify_podcast_with_listen_notes(rss_feed_parser)
 
             confirmation_code = PodcastConfirmation.objects.create(rss_feed_url=rss_feed_url,
                                                                    owner=request.user).rss_confirmation_code

@@ -1,6 +1,8 @@
 from rest_framework import permissions, exceptions
 
-from .models import GuestPost
+from podcasts.models import Podcast
+from .models import GuestPost, GuestSpeakingApplication
+from .utils import get_applications_sent_this_month_by_user
 
 
 ACTIVE_POSTS_PER_PODCAST = 1
@@ -24,4 +26,20 @@ class GuestPostPermissions(permissions.BasePermission):
             if GuestPost.objects.filter(owner=request.user,
                                         is_active=True).count() >= ACTIVE_POSTS_PER_PODCAST:
                 raise exceptions.PermissionDenied(f'Only {ACTIVE_POSTS_PER_PODCAST} active posts allowed per Podcast')
+        return True
+
+
+APPLICATIONS_ALLOWED_PER_MONTH = 10
+
+
+class CanApplyToGuestPost(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        if Podcast.objects.filter(owner=request.user).count() == 0:
+            raise exceptions.PermissionDenied('You need to be a verified podcaster to apply to posts!')
+        if get_applications_sent_this_month_by_user(request.user) >= APPLICATIONS_ALLOWED_PER_MONTH:
+            raise exceptions.PermissionDenied(f'You cannot apply to more than {APPLICATIONS_ALLOWED_PER_MONTH} '
+                                              'times each month')
+        if GuestSpeakingApplication.objects.filter(guest_post=request.data.get('guestPostId')).count() > 0:
+            raise exceptions.PermissionDenied('You can\'t apply to the same post more than once')
         return True

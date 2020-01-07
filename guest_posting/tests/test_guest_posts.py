@@ -6,8 +6,8 @@ from django.contrib.auth.models import User
 
 from podcasts.models import Podcast, PodcastConfirmation
 
-from .api import GuestPostViewSet
-from .models import GuestPost
+from guest_posting.api import GuestPostViewSet, GuestSpeakingApplication
+from guest_posting.models import GuestPost
 
 
 class Test(TestCase):
@@ -26,9 +26,10 @@ class Test(TestCase):
         other_user_podcast = Podcast.objects.create(owner=self.user2, title="Other Podcast", image_link='other_podcast',
                                                     confirmation=PodcastConfirmation.objects.create(owner=self.user2,
                                                                                                     rss_feed_url='pc2'))
-        self.sample_uuid = GuestPost.objects.create(owner=self.user, podcast=self.cali_podcast,
-                                                    description='Talking politics in California',
-                                                    heading='Looking for a Californian').id
+        self.guest_post = GuestPost.objects.create(owner=self.user, podcast=self.cali_podcast,
+                                          description='Talking politics in California',
+                                          heading='Looking for a Californian')
+        self.sample_uuid = self.guest_post.id
         GuestPost.objects.create(owner=self.user, podcast=self.cali_podcast, description='Talking trash in California',
                                  heading='Looking for a Californian Trashman')
         GuestPost.objects.create(owner=self.user, podcast=troll_podcast, heading='Looking for a Troll on Reddit',
@@ -53,12 +54,13 @@ class Test(TestCase):
 
     def test_retrieve_first_post(self):
         request = self.factory.get(self.request_url)
-        force_authenticate(request, user=self.user)
+        force_authenticate(request, user=self.user2)
         view = GuestPostViewSet.as_view({'get': 'retrieve'})
         response = view(request, pk=self.sample_uuid)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['heading'], 'Looking for a Californian')
         self.assertEqual(response.data['podcast']['title'], 'Cali Podcast')
+        self.assertEqual(response.data['has_already_applied'], False)
 
     def create_inactive_post_return_uuid(self):
         none_active_guest_post = GuestPost.objects.get(heading='Looking for a Californian Trashman', owner=self.user)
@@ -156,3 +158,18 @@ class Test(TestCase):
         view = GuestPostViewSet.as_view({'get': 'list'})
         response = view(request, page=0)
         self.assertNotEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_user_requesting_has_already_applied_to_post(self):
+        GuestSpeakingApplication.objects.create(applicant=self.user2, guest_post=self.guest_post)
+        request = self.factory.get(self.request_url)
+        force_authenticate(request, user=self.user2)
+        view = GuestPostViewSet.as_view({'get': 'retrieve'})
+        response = view(request, pk=self.sample_uuid)
+        self.assertEqual(response.data['has_already_applied'], True)
+
+    def test_user_correct_host(self):
+        request = self.factory.get(self.request_url)
+        force_authenticate(request, user=self.user)
+        view = GuestPostViewSet.as_view({'get': 'retrieve'})
+        response = view(request, pk=self.sample_uuid)
+        self.assertEqual(response.data['host'], self.user.username)

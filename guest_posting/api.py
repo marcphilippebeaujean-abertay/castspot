@@ -1,10 +1,12 @@
-from rest_framework import exceptions, viewsets, status
+from rest_framework import exceptions, viewsets, status, permissions
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import GuestPost
+from .models import GuestPost, GuestSpeakingApplication
 from .serializers import GuestPostSerializer
-from .permissions import GuestPostPermissions
+from .permissions import GuestPostPermissions, CanApplyToGuestPost, APPLICATIONS_ALLOWED_PER_MONTH
 from .pagination import GuestPostPagination
+from .utils import get_applications_sent_this_month_by_user
 
 
 class GuestPostViewSet(viewsets.ViewSet,
@@ -38,3 +40,17 @@ class GuestPostViewSet(viewsets.ViewSet,
     # TODO: implement working update
 
 
+class GuestSpeakingApplicationView(APIView):
+    permission_classes = (permissions.IsAuthenticated, CanApplyToGuestPost)
+
+    def post(self, request):
+        if 'guestPostId' not in request.data:
+            raise exceptions.UnsupportedMediaType('Guest Post ID is missing!')
+        guest_post = GuestPost.objects.get(pk=request.data.get('guestPostId'))
+        if guest_post.owner == request.user:
+            raise exceptions.PermissionDenied('You can\'t apply to your own guest post')
+        GuestSpeakingApplication.objects.create(guest_post=guest_post,
+                                                application_message=request.data.get('applicationMessage', ''),
+                                                applicant=request.user)
+        applications_left = APPLICATIONS_ALLOWED_PER_MONTH - get_applications_sent_this_month_by_user(request.user)
+        return Response({'remainingApplications': applications_left}, status=status.HTTP_201_CREATED)

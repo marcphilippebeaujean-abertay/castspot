@@ -6,6 +6,7 @@ from .utils import get_applications_sent_this_month_by_user
 
 
 ACTIVE_POSTS_PER_PODCAST = 1
+APPLICATIONS_ALLOWED_PER_MONTH = 10
 
 
 class GuestPostPermissions(permissions.BasePermission):
@@ -29,9 +30,6 @@ class GuestPostPermissions(permissions.BasePermission):
         return True
 
 
-APPLICATIONS_ALLOWED_PER_MONTH = 10
-
-
 class CanApplyToGuestPost(permissions.BasePermission):
 
     def has_permission(self, request, view):
@@ -40,6 +38,7 @@ class CanApplyToGuestPost(permissions.BasePermission):
         if get_applications_sent_this_month_by_user(request.user) >= APPLICATIONS_ALLOWED_PER_MONTH:
             raise exceptions.PermissionDenied(f'You cannot apply to more than {APPLICATIONS_ALLOWED_PER_MONTH} '
                                               'times each month')
-        if GuestSpeakingApplication.objects.filter(guest_post=request.data.get('guestPostId')).count() > 0:
+        if GuestSpeakingApplication.objects.filter(applicant=request.user,
+                                                   guest_post=request.data.get('guestPostId')).count() > 0:
             raise exceptions.PermissionDenied('You can\'t apply to the same post more than once')
         return True

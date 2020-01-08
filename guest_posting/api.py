@@ -6,7 +6,7 @@ from .models import GuestPost, GuestSpeakingApplication
 from .serializers import GuestPostSerializer
 from .permissions import GuestPostPermissions, CanApplyToGuestPost, APPLICATIONS_ALLOWED_PER_MONTH
 from .pagination import GuestPostPagination
-from .utils import get_applications_sent_this_month_by_user
+from .utils import get_applications_sent_this_month_by_user, send_application
 
 
 class GuestPostViewSet(viewsets.ViewSet,
@@ -49,8 +49,10 @@ class GuestSpeakingApplicationView(APIView):
         guest_post = GuestPost.objects.get(pk=request.data.get('guestPostId'))
         if guest_post.owner == request.user:
             raise exceptions.PermissionDenied('You can\'t apply to your own guest post')
-        GuestSpeakingApplication.objects.create(guest_post=guest_post,
-                                                application_message=request.data.get('applicationMessage', ''),
-                                                applicant=request.user)
+        application = GuestSpeakingApplication(guest_post=guest_post,
+                                               application_message=request.data.get('applicationMessage', ''),
+                                               applicant=request.user)
+        send_application(application, guest_post)
+        application.save()
         applications_left = APPLICATIONS_ALLOWED_PER_MONTH - get_applications_sent_this_month_by_user(request.user)
         return Response({'remainingApplications': applications_left}, status=status.HTTP_201_CREATED)

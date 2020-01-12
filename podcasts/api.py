@@ -17,6 +17,7 @@ class RssFeedConfirmationRequestView(APIView):
     permission_classes = (permissions.IsAuthenticated, AddRssConfirmationPermissions)
 
     def post(self, request):
+        self.check_permissions(request)
         if 'rssFeed' not in request.data:
             raise UnsupportedMediaType('RSS Feed missing')
         rss_feed_url = request.data.get('rssFeed')
@@ -41,6 +42,7 @@ class PodcastConfirmationView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
+        self.check_permissions(request)
         if 'confirmationCode' not in request.data:
             raise UnsupportedMediaType('Confirmation code missing!')
         try:
@@ -70,6 +72,7 @@ class UserPodcastView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
+        self.check_permissions(request)
         podcast_confirmation_pending = PodcastConfirmation.objects.filter(owner=request.user, pending=True).count() > 0
         resp_data = {'podcast_confirmation_pending': podcast_confirmation_pending,
                      'podcasts': Podcast.objects.filter(owner=request.user)}

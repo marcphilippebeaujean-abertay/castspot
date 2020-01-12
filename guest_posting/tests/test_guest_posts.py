@@ -89,13 +89,13 @@ class Test(TestCase):
         self.assertEqual(response.data['heading'], 'Looking for a Californian Trashman')
         self.assertEqual(response.data['podcast']['title'], 'Cali Podcast')
 
-    def test_cant_retrieve_inactive_post_as_not_authenticated_user(self):
+    def test_can_retrieve_inactive_post_as_not_authenticated_user(self):
         uuid = self.create_inactive_post_return_uuid()
 
         request = self.factory.get(self.request_url)
         view = GuestPostViewSet.as_view({'get': 'retrieve'})
         response = view(request, pk=uuid)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_create_a_post(self):
         test_user = User.objects.create(username="test_user")
@@ -128,20 +128,6 @@ class Test(TestCase):
         force_authenticate(request, user=self.user)
         response = view(request)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-
-    def test_update_post(self):
-        data = {
-            'id': self.sample_uuid,
-            'heading': 'New Heading',
-            'description': 'new description',
-        }
-        request = self.factory.patch(self.request_url, data=data)
-        view = GuestPostViewSet.as_view({'patch': 'update'})
-        force_authenticate(request, user=self.user)
-        response = view(request, pk=self.sample_uuid)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['heading'], 'New Heading')
-        self.assertEqual(response.data['description'], 'new description')
 
     def test_show_users_posts_including_none_active(self):
         self.create_inactive_post_return_uuid()

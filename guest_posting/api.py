@@ -9,10 +9,7 @@ from .pagination import GuestPostPagination
 from .utils import get_applications_sent_this_month_by_user, send_application
 
 
-class GuestPostViewSet(viewsets.ViewSet,
-                       viewsets.generics.ListCreateAPIView,
-                       viewsets.mixins.UpdateModelMixin,
-                       viewsets.mixins.RetrieveModelMixin):
+class GuestPostViewSet(viewsets.ViewSet, viewsets.generics.ListCreateAPIView, viewsets.mixins.RetrieveModelMixin):
     permission_classes = (GuestPostPermissions,)
     serializer_class = GuestPostSerializer
     queryset = GuestPost.objects.all()
@@ -37,22 +34,40 @@ class GuestPostViewSet(viewsets.ViewSet,
             return self.get_paginated_response(data)
         raise exceptions.NotFound('This page of guest postings could not be found.')
 
-    # TODO: implement working update
+
+class UnpublishPostView(APIView):
+
+    def post(self, request):
+        try:
+            if not request.user.is_authenticated:
+                raise exceptions.PermissionDenied('You need to log in!')
+            guest_post = GuestPost.objects.get(pk=request.data.get('pk'))
+            if guest_post.owner != request.user:
+                raise exceptions.PermissionDenied('You cannot unpublish another users post')
+            self.check_object_permissions(request=request, obj=guest_post)
+            if guest_post.is_active:
+                guest_post.is_active = False
+                guest_post.save()
+            return Response(status=status.HTTP_200_OK)
+        except GuestPost.DoesNotExist:
+            raise exceptions.NotFound('The post you tried to unpublish could not be found')
 
 
 class GuestSpeakingApplicationView(APIView):
     permission_classes = (permissions.IsAuthenticated, CanApplyToGuestPost)
 
     def post(self, request):
+        self.check_permissions(request)
         if 'guestPostId' not in request.data:
             raise exceptions.UnsupportedMediaType('Guest Post ID is missing!')
         guest_post = GuestPost.objects.get(pk=request.data.get('guestPostId'))
         if guest_post.owner == request.user:
             raise exceptions.PermissionDenied('You can\'t apply to your own guest post')
         application = GuestSpeakingApplication(guest_post=guest_post,
-                                               application_message=request.data.get('applicationMessage', ''),
+                                               application_message=request.data.get('applicationMessage', ' '),
                                                applicant=request.user)
-        send_application(application, guest_post)
+        # TODO fix sending applications
+        #send_application(application, guest_post)
         application.save()
         applications_left = APPLICATIONS_ALLOWED_PER_MONTH - get_applications_sent_this_month_by_user(request.user)
         return Response({'remainingApplications': applications_left}, status=status.HTTP_201_CREATED)

@@ -11,6 +11,7 @@ class AccountDetailsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
+        self.check_permissions(request)
         try:
             profile_owner = User.objects.get(username=request.user)
         except User.DoesNotExist:
@@ -24,6 +25,7 @@ class UserContactDetailsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def get(self, request):
+        self.check_permissions(request)
         owner = User.objects.get(username=request.user)
         contact_information, _ = ContactDetails.objects.get_or_create(owner=owner, defaults={'email': owner.email})
         serializer = ContactDetailsSerializer(contact_information)
@@ -31,6 +33,7 @@ class UserContactDetailsView(APIView):
 
     # TODO: Really an update view, how to do in Django?
     def post(self, request):
+        self.check_permissions(request)
         owner = User.objects.get(username=request.user)
         contact_information, _ = ContactDetails.objects.get_or_create(owner=owner, defaults={'email': owner.email})
         contact_information.email = request.data.get('email', '')

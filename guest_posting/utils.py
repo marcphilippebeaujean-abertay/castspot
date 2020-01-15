@@ -1,16 +1,21 @@
-from datetime import datetime, timedelta
+from datetime import date, timedelta, datetime
 from django.core.mail import send_mail
 from rest_framework import exceptions
 
 from users.models import ContactDetails
 from podcasts.models import Podcast
 
-from .models import GuestSpeakingApplication
+from .models import GuestSpeakingApplication, GuestPost
+
+
+def get_number_of_posts_this_month(user):
+    current_month = date(year=datetime.now().year, month=datetime.now().month, day=1)
+    return GuestPost.objects.filter(owner=user, created_at__gte=current_month).count()
 
 
 def get_applications_sent_this_month_by_user(user):
-    one_month_ago = datetime.now() - timedelta(days=32)
-    return GuestSpeakingApplication.objects.filter(applicant=user, created_at__gte=one_month_ago).count()
+    current_month = date(year=datetime.now().year, month=datetime.now().month, day=1)
+    return GuestSpeakingApplication.objects.filter(applicant=user, created_at__gte=current_month).count()
 
 
 def send_application(application, guest_post):

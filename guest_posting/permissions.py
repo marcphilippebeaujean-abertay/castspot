@@ -1,11 +1,11 @@
 from rest_framework import permissions, exceptions
 
 from podcasts.models import Podcast
-from .models import GuestPost, GuestSpeakingApplication
-from .utils import get_applications_sent_this_month_by_user
+from .models import GuestSpeakingApplication
+from .utils import get_applications_sent_this_month_by_user, get_number_of_posts_this_month
 
 
-ACTIVE_POSTS_PER_PODCAST = 1
+POSTS_PER_MONTH = 2
 APPLICATIONS_ALLOWED_PER_MONTH = 10
 
 
@@ -21,10 +21,8 @@ class GuestPostPermissions(permissions.BasePermission):
             if not request.user.is_authenticated:
                 raise exceptions.PermissionDenied('You need to log in!')
             # TODO: filter by posts per podcast
-            #podcast = Podcast.objects.get(title=request.data['podcast_title'])
-            if GuestPost.objects.filter(owner=request.user,
-                                        is_active=True).count() >= ACTIVE_POSTS_PER_PODCAST:
-                raise exceptions.PermissionDenied(f'Only {ACTIVE_POSTS_PER_PODCAST} active posts allowed per Podcast')
+            if get_number_of_posts_this_month(user=request.user) >= POSTS_PER_MONTH:
+                raise exceptions.PermissionDenied(f'You can only post {POSTS_PER_MONTH} times per month')
         return True
 
 

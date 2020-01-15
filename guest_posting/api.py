@@ -1,6 +1,7 @@
 from rest_framework import exceptions, viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from datetime import datetime, timedelta
 
 from .models import GuestPost, GuestSpeakingApplication
 from .serializers import GuestPostSerializer
@@ -22,7 +23,7 @@ class GuestPostViewSet(viewsets.ViewSet, viewsets.generics.ListCreateAPIView, vi
                 raise exceptions.NotAuthenticated('You need to be authenticated to view your posts.')
             filter_qs = filter_qs.filter(owner=self.request.user)
         else:
-            filter_qs = filter_qs.filter(is_active=True)
+            filter_qs = filter_qs.filter(is_active=True, created_at__gte=datetime.now() - timedelta(days=31))
         queryset = self.filter_queryset(filter_qs)
         try:
             page = self.paginate_queryset(queryset)
@@ -66,8 +67,7 @@ class GuestSpeakingApplicationView(APIView):
         application = GuestSpeakingApplication(guest_post=guest_post,
                                                application_message=request.data.get('applicationMessage', ' '),
                                                applicant=request.user)
-        # TODO fix sending applications
-        #send_application(application, guest_post)
+        send_application(application, guest_post)
         application.save()
         applications_left = APPLICATIONS_ALLOWED_PER_MONTH - get_applications_sent_this_month_by_user(request.user)
         return Response({'remainingApplications': applications_left}, status=status.HTTP_201_CREATED)

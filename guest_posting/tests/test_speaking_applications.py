@@ -5,9 +5,11 @@ from rest_framework import status
 from django.contrib.auth.models import User
 
 from podcasts.models import Podcast, PodcastConfirmation
+from users.models import ContactDetails
 
 from guest_posting.api import GuestSpeakingApplicationView
 from guest_posting.models import GuestPost, GuestSpeakingApplication
+from guest_posting.permissions import APPLICATIONS_ALLOWED_PER_MONTH
 
 
 class Test(TestCase):
@@ -15,6 +17,7 @@ class Test(TestCase):
     def setUp(self):
         self.user = User.objects.create(username="donald")
         self.user2 = User.objects.create(username="john")
+        ContactDetails.objects.create(owner=self.user2, email='helloworld@gmail.com')
         self.factory = RequestFactory()
         self.view = GuestSpeakingApplicationView.as_view()
         self.request_url = '/api/speaking-application/'
@@ -56,7 +59,7 @@ class Test(TestCase):
         self.assertEqual(response.data['remainingApplications'], 9)
 
     def test_too_many_applications_this_month(self):
-        for i in range(10):
+        for i in range(APPLICATIONS_ALLOWED_PER_MONTH):
             GuestSpeakingApplication.objects.create(applicant=self.user2,
                                                     guest_post=self.guest_post,
                                                     application_message='')

@@ -21,7 +21,7 @@ class TestAccountDetailsView(TestCase):
         response = self.view(request)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_get_user_dont_exist(self):
+    def test_get_user_info(self):
         request = self.factory.get(self.request_url, {}, format='json')
         force_authenticate(request, user=self.user)
         response = self.view(request)

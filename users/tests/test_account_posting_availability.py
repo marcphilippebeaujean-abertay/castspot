@@ -19,7 +19,7 @@ class TestAccountDetailsView(TestCase):
         self.user = User.objects.create(username=self.username, email=self.email)
         self.view = UserPostingAvailabilityInformationView.as_view()
         self.factory = RequestFactory()
-        self.request_url = '/api/account-details/'
+        self.request_url = '/api/posting-availability/'
 
     def test_not_authorized(self):
         request = self.factory.get(self.request_url, {}, format='json')

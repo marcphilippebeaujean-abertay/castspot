@@ -3,9 +3,12 @@ from django.test.client import RequestFactory
 from rest_framework.test import force_authenticate
 from rest_framework import status
 from django.contrib.auth.models import User
+import pyPodcastParser.Podcast
+import requests
 
 from podcasts.api import RssFeedConfirmationRequestView
 from podcasts.models import PodcastConfirmation, Podcast
+from podcasts.utils import verify_podcast_with_listen_notes
 
 JUNIOR_DEV_PODCAST_FEED_URL = 'https://feed.podbean.com/juniordevcast/feed.xml'
 
@@ -61,3 +64,16 @@ class TestRssFeedConfirmationRequest(TestCase):
         force_authenticate(request, user=self.user)
         response = self.view(request)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_multiple_valid_rss_feeds(self):
+        response = requests.get('http://joeroganexp.joerogan.libsynpro.com/rss')
+        rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
+        verify_podcast_with_listen_notes(rss_feed_parser)
+        response = requests.get('http://feeds.backtracks.fm/feeds/indiehackers/indiehackers/feed.xml?1530230413')
+        rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
+        verify_podcast_with_listen_notes(rss_feed_parser)
+
+        # TODO: figure out what to do here cause cors is enabled
+        #response = requests.get('https://softwareengineeringdaily.com/feed/podcast/')
+        #rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
+        #verify_podcast_with_listen_notes(rss_feed_parser)

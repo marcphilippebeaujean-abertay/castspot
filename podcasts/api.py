@@ -5,7 +5,8 @@ from rest_framework.exceptions import ParseError, UnsupportedMediaType
 from django.utils import timezone
 from datetime import timedelta
 from smtplib import SMTPException
-import feedparser
+import pyPodcastParser.Podcast
+import requests
 
 from .permissions import AddRssConfirmationPermissions
 from .models import PodcastConfirmation, Podcast
@@ -22,13 +23,18 @@ class RssFeedConfirmationRequestView(APIView):
             raise UnsupportedMediaType('RSS Feed missing')
         rss_feed_url = request.data.get('rssFeed')
         try:
-            rss_feed_parser = feedparser.parse(rss_feed_url)
+            response = requests.get(rss_feed_url)
+            if response.status_code is not 200:
+                raise ParseError('We couldn\'t access your RSS feed. Make sure that it is hosted somewhere that allows'\
+                                 'third parties to download it (CORS is not enabled). A common problem is that the link '\
+                                 'you uploaded is hosted on WordPress instead of your Podcast Host.')
+            rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
             verify_podcast_with_listen_notes(rss_feed_parser)
 
             confirmation_code = PodcastConfirmation.objects.create(rss_feed_url=rss_feed_url,
                                                                    owner=request.user).rss_confirmation_code
 
-            email = rss_feed_parser.feed.author_detail.email
+            email = rss_feed_parser.owner_email
             send_podcast_confirmation_code_email(email, confirmation_code)
             return Response(status=status.HTTP_200_OK)
         except AttributeError:
@@ -55,10 +61,12 @@ class PodcastConfirmationView(APIView):
             if rss_code_confirmation.created_at < (timezone.now() - timedelta(hours=2)):
                 raise ParseError('Code invalid')
             else:
-                feed_data = feedparser.parse(rss_code_confirmation.rss_feed_url).feed
+                response = requests.get(rss_code_confirmation.rss_feed_url)
+                feed_data = pyPodcastParser.Podcast.Podcast(response.content)
+                image_url = feed_data.image_link if feed_data.image_link is not None else feed_data.itune_image
                 podcast = Podcast.objects.create(owner=request.user,
                                                  title=feed_data.title,
-                                                 image_link=feed_data.image.href,
+                                                 image_link=image_url,
                                                  confirmation=rss_code_confirmation)
                 return Response(PodcastSerializer(podcast).data, status=status.HTTP_200_OK)
         except AttributeError:

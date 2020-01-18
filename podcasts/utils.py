@@ -23,9 +23,9 @@ def send_podcast_confirmation_code_email(email, confirmation_code):
               fail_silently=False)
 
 
-def verify_podcast_with_listen_notes(rss_feed_parser):
-    title = rss_feed_parser.feed.title
-    email = rss_feed_parser.feed.author_detail.email
+def verify_podcast_with_listen_notes(podcast_parser):
+    title = podcast_parser.title
+    email = podcast_parser.owner_email
 
     title_query = urllib.parse.urlencode({'q': title})
     url = f'https://listen-api.listennotes.com/api/v2/search?{title_query}&sort_by_date=0&type=podcast&only_in=title'
@@ -37,5 +37,6 @@ def verify_podcast_with_listen_notes(rss_feed_parser):
         if result['title_original'] == title:
             if result['email'] == email:
                 return
-    raise exceptions.ParseError('Information in your RSS Feed did not correlate with that of listennotes.com, ' \
-                                'the directory we use to validate podcasters. Please check your details are correct')
+    raise exceptions.ParseError('Information in your RSS Feed did not correlate with that of listennotes.com, '\
+                                'the directory we use to validate podcasters. Please check your details are correct '\
+                                'and the rss is available to third party applications.')

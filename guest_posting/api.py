@@ -10,7 +10,9 @@ from .pagination import GuestPostPagination
 from .utils import get_applications_sent_this_month_by_user, send_application
 
 
-class GuestPostViewSet(viewsets.ViewSet, viewsets.generics.ListCreateAPIView, viewsets.mixins.RetrieveModelMixin):
+class GuestPostViewSet(viewsets.ViewSet,
+                       viewsets.generics.ListCreateAPIView,
+                       viewsets.mixins.RetrieveModelMixin):
     permission_classes = (GuestPostPermissions,)
     serializer_class = GuestPostSerializer
     queryset = GuestPost.objects.all()
@@ -19,8 +21,6 @@ class GuestPostViewSet(viewsets.ViewSet, viewsets.generics.ListCreateAPIView, vi
     def list(self, request, *args, **kwargs):
         filter_qs = GuestPost.objects.order_by('created_at').reverse()
         if request.GET.get('showUserPosts', False):
-            if not request.user.is_authenticated:
-                raise exceptions.NotAuthenticated('You need to be authenticated to view your posts.')
             filter_qs = filter_qs.filter(owner=self.request.user)
         else:
             filter_qs = filter_qs.filter(is_active=True, created_at__gte=datetime.now() - timedelta(days=31))

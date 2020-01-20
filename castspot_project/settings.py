@@ -64,6 +64,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'castspot_project.urls'
 
+EMAIL_BACKEND = 'django_ses.SESBackend'
+AWS_ACCESS_KEY_ID = 'AKIA4TI6BASVM3WKNEIM'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_SES_REGION_NAME = 'eu-central-1'
+AWS_SES_REGION_ENDPOINT = 'eu-central-1.amazonses.com'
+
+
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -149,5 +156,3 @@ ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 OLD_PASSWORD_FIELD_ENABLED = True
 PASSWORD_RESET_TIMEOUT_DAYS = 1
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 2
-#CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ALLOW_CREDENTIALS = True

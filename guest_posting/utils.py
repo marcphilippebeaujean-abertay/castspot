@@ -20,7 +20,6 @@ def get_applications_sent_this_month_by_user(user):
 
 def send_application(application, guest_post):
     message = 'A user has just applied to speak on your podcast via CastSpot! Here are their details: \n'
-    message += f'Username: {guest_post.owner.username} \n'
     message += f'Host of the following show: {Podcast.objects.filter(owner=application.applicant)[0].title} \n'
     message += 'They left the following information that you can contact them with: \n'
     try:
@@ -33,6 +32,10 @@ def send_application(application, guest_post):
         message += f'Discord: {contact_details.discord} \n'
     if len(contact_details.skype) > 0:
         message += f'Skype: {contact_details.skype} \n'
+    message += 'You already found the perfect guest or are simply sick of receiving these emails? Use this link to ' \
+               'to unpublish your post: '
+    # TODO: change this for deploy
+    message += f'http://localhost:3000/delete-post/{guest_post.id}'
     send_mail('You got a new Guest Speaking Application!',
               message,
               'castspot@protonmail.com',  # TODO: REAL EMAIL

@@ -38,6 +38,6 @@ def send_application(application, guest_post):
     message += f'http://localhost:3000/delete-post/{guest_post.id}'
     send_mail('You got a new Guest Speaking Application!',
               message,
-              'castspot@protonmail.com',  # TODO: REAL EMAIL
+              'castspot.noreply@gmail.com',
               [f'{guest_post.owner.email}'],
               fail_silently=False)

@@ -119,4 +119,10 @@ cd() {
   autoenv_cd "$@"
 }
 
-DB_PASSWORD=password
+export DB_PASSWORD=password
+export DB_USERNAME=root
+export DB_NAME=castspot
+export DB_HOST=127.0.0.1
+export SECRET_KEY=-vc5w$d3lzz4eb5p@etjdrmms&@@09t$vstbed^-h_+j^su^e
+export AWS_SES_SMTP_USER=AKIA4TI6BASVEMEUAMPH
+export AWS_SES_PASSWORD=BGTCnR8YJpSmHrg1klIsSuM8BSDMXHf1bNGcgVEKbi2y

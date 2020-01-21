@@ -75,4 +75,17 @@ if [ -n "${BASH:-}" -o -n "${ZSH_VERSION:-}" ] ; then
     hash -r
 fi
 
-DB_PASSWORD=password
+DB_PASSWORD="password"
+export DB_PASSWORD
+DB_USERNAME="root"
+export DB_USERNAME
+DB_NAME="castspot"
+export DB_NAME
+DB_HOST="127.0.0.1"
+export DB_HOST
+SECRET_KEY="-vc5w$d3lzz4eb5p@etjdrmms&@@09t$vstbed^-h_+j^su^e"
+export SECRET_KEY
+AWS_SES_SMTP_USER="AKIA4TI6BASVEMEUAMPH"
+export AWS_SES_SMTP_USER
+AWS_SES_PASSWORD="BGTCnR8YJpSmHrg1klIsSuM8BSDMXHf1bNGcgVEKbi2y"
+export AWS_SES_PASSWORD

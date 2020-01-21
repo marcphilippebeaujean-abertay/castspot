@@ -4,7 +4,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '=-vcsw$q3lit4eb5p@etjdrmms&@@09t$vstbed^-h_+j^su^e'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -64,12 +64,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'castspot_project.urls'
 
-EMAIL_BACKEND = 'django_ses.SESBackend'
-AWS_ACCESS_KEY_ID = 'AKIA4TI6BASVM3WKNEIM'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_SES_REGION_NAME = 'eu-central-1'
-AWS_SES_REGION_ENDPOINT = 'eu-central-1.amazonses.com'
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'eu-central-1.amazonses.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.environ.get('AWS_SES_SMTP_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('AWS_SES_PASSWORD')
+EMAIL_USE_TLS = True
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -108,10 +108,10 @@ WSGI_APPLICATION = 'castspot_project.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'castspot',
-        'USER': 'root',
-        'PASSWORD': 'password',
-        'HOST': '127.0.0.1',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USERNAME'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '3306',
     }
 }

@@ -110,8 +110,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USERNAME'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
+        'PASSWORD': 'x32aBc9X',
+        'HOST': 'castspot.cfugrszcexcp.eu-central-1.rds.amazonaws.com',
         'PORT': '3306',
     }
 }

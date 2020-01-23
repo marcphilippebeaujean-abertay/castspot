@@ -10,7 +10,8 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True if os.environ.get('IS_PROD') == 'FALSE' else False
 
 ALLOWED_HOSTS = [
-    'castspot.onrender.com'
+    '127.0.0.1',
+    os.environ.get('DJANGO_ALLOWED_HOSTS', default='castspot.onrender.com')
 ]
 
 
@@ -39,7 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if os.environ.get('IS_PROD') == 'FALSE' else 'django.core.mail.backends.console.EmailBackend'
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
@@ -112,8 +113,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': os.environ.get('DB_NAME'),
         'USER': os.environ.get('DB_USERNAME'),
-        'PASSWORD': 'x32aBc9X',
-        'HOST': 'castspot.cfugrszcexcp.eu-central-1.rds.amazonaws.com',
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '3306',
     }
 }
@@ -121,11 +122,10 @@ DATABASES = {
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = []
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

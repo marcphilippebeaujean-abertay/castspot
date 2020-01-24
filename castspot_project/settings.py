@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if os.environ.get('IS_PROD') == 'FALSE' else 'django.core.mail.backends.console.EmailBackend'
 
 CORS_ORIGIN_WHITELIST = [
+    'https://castspot.onrender.com/',
     'http://localhost:3000',
     'http://localhost:8000',
     'http://127.0.0.1:3000',

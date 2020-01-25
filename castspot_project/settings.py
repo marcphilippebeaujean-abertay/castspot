@@ -10,7 +10,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = True if os.environ.get('IS_PROD') == 'FALSE' else False
 
 ALLOWED_HOSTS = [
-    '127.0.0.1',
+    '*' if os.environ.get('IS_PROD') == 'FALSE' else '',
     os.environ.get('DJANGO_ALLOWED_HOSTS', default='castspot.onrender.com')
 ]
 
@@ -46,6 +46,7 @@ CORS_ORIGIN_WHITELIST = [
     'https://castspot.onrender.com',
     'http://localhost:3000',
     'http://localhost:8000',
+    'http://localhost',
     'http://127.0.0.1:3000',
     'http://127.0.0.1:8000',
 ]
@@ -68,12 +69,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'castspot_project.urls'
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'eu-central-1.amazonses.com'
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_HOST = 'email-smtp.eu-central-1.amazonaws.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = os.environ.get('AWS_SES_SMTP_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('AWS_SES_PASSWORD')
-EMAIL_USE_TLS = True
+EMAIL_USE_SSL = True
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',

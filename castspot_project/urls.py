@@ -9,7 +9,7 @@ urlpatterns = [
     path('api/', include('podcasts.urls')),
     path('api/', include('guest_posting.urls')),
 
-    path('admin/', admin.site.urls),
+    path('realadmin/', admin.site.urls),
     path('api/', include('rest_framework.urls')),
     path('api/rest-auth/', include('rest_auth.urls')),
     path('api/rest-auth/registration/', include('rest_auth.registration.urls')),

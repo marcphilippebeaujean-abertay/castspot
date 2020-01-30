@@ -18,7 +18,7 @@ def send_podcast_confirmation_code_email(email, confirmation_code):
               '\"My Podcast\" tab: \n'
               f'{confirmation_code} \n'
               'This code will expire in 2-3 hours.',
-              'castspot@protonmail.com', # TODO: REAL EMAIL
+              'castspot.noreply@gmail.com',
               [f'{email}'],
               fail_silently=False)
 

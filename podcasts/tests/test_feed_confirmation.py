@@ -3,12 +3,14 @@ from django.test.client import RequestFactory
 from rest_framework.test import force_authenticate
 from rest_framework import status
 from django.contrib.auth.models import User
+from datetime import timedelta, datetime
 import pyPodcastParser.Podcast
 import requests
 
 from podcasts.api import RssFeedConfirmationRequestView
 from podcasts.models import PodcastConfirmation, Podcast
 from podcasts.utils import verify_podcast_with_listen_notes
+from podcasts.permissions import RSS_CODE_EXPIRATION_HOURS
 
 JUNIOR_DEV_PODCAST_FEED_URL = 'https://feed.podbean.com/juniordevcast/feed.xml'
 
@@ -36,6 +38,15 @@ class TestRssFeedConfirmationRequest(TestCase):
         response = self.view(request)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
 
+    def test_outdated_pending_confirmation(self):
+        podcast_confirmation = PodcastConfirmation.objects.create(owner=self.user)
+        podcast_confirmation.created_at = datetime.now() - timedelta(hours=RSS_CODE_EXPIRATION_HOURS+1)
+        podcast_confirmation.save()
+        request = self.factory.post(self.request_url, self.valid_feed_data, format='json')
+        force_authenticate(request, user=self.user)
+        response = self.view(request)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
     def test_no_rss_feed(self):
         request = self.factory.post(self.request_url, {}, format='json')
         force_authenticate(request, user=self.user)
@@ -46,7 +57,7 @@ class TestRssFeedConfirmationRequest(TestCase):
         request = self.factory.post(self.request_url, self.valid_feed_data, format='json')
         force_authenticate(request, user=self.user)
         response = self.view(request)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         rss_feed = PodcastConfirmation.objects.get(rss_feed_url=JUNIOR_DEV_PODCAST_FEED_URL)
         self.assertEqual(len(rss_feed.rss_confirmation_code), 8)
 

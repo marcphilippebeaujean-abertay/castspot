@@ -3,12 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.exceptions import ParseError, UnsupportedMediaType
 from django.utils import timezone
-from datetime import timedelta
+from datetime import timedelta, datetime
 from smtplib import SMTPException
 import pyPodcastParser.Podcast
 import requests
 
-from .permissions import AddRssConfirmationPermissions
+from .permissions import AddRssConfirmationPermissions, RSS_CODE_EXPIRATION_HOURS
 from .models import PodcastConfirmation, Podcast
 from .utils import send_podcast_confirmation_code_email, verify_podcast_with_listen_notes
 from .serializers import UserPodcastDataSerializer, PodcastSerializer
@@ -36,7 +36,7 @@ class RssFeedConfirmationRequestView(APIView):
 
             email = rss_feed_parser.owner_email
             send_podcast_confirmation_code_email(email, confirmation_code)
-            return Response(status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_201_CREATED)
         except AttributeError:
             raise ParseError('Could not read RSS. Please ensure it is valid and that it contains an email field')
         except SMTPException:
@@ -53,8 +53,9 @@ class PodcastConfirmationView(APIView):
             raise UnsupportedMediaType('Confirmation code missing!')
         try:
             confirmation_code = request.data.get('confirmationCode')
+            confirmation_expired_time = datetime.now() - timedelta(hours=RSS_CODE_EXPIRATION_HOURS)
             rss_code_confirmation = PodcastConfirmation.objects\
-                .filter(pending=True, owner=request.user)\
+                .filter(pending=True, owner=request.user, created_at__gte=confirmation_expired_time)\
                 .get(rss_confirmation_code=confirmation_code)
             rss_code_confirmation.pending = False
             rss_code_confirmation.save()

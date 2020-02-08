@@ -21,7 +21,10 @@ class GuestPostViewSet(viewsets.ViewSet,
     def list(self, request, *args, **kwargs):
         filter_qs = GuestPost.objects.order_by('created_at').reverse()
         if request.GET.get('showUserPosts', False):
-            filter_qs = filter_qs.filter(owner=self.request.user)
+            try:
+                filter_qs = filter_qs.filter(owner=self.request.user)
+            except:
+                raise exceptions.PermissionDenied('Not authorized!')
         else:
             filter_qs = filter_qs.filter(is_active=True, created_at__gte=datetime.now() - timedelta(days=31))
         queryset = self.filter_queryset(filter_qs)

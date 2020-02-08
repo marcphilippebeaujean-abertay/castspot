@@ -177,7 +177,7 @@ class Test(TestCase):
         request = self.factory.get(self.request_url, data={'showUserPosts': True})
         view = GuestPostViewSet.as_view({'get': 'list'})
         response = view(request, page=0)
-        self.assertNotEqual(response.status_code, status.HTTP_200_OK)
+        self.assertNotEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_user_requesting_has_already_applied_to_post(self):
         GuestSpeakingApplication.objects.create(applicant=self.user2, guest_post=self.guest_post)

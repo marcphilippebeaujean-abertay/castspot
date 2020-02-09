@@ -9,7 +9,7 @@ import pyPodcastParser.Podcast
 import requests
 
 from .permissions import AddRssConfirmationPermissions, RSS_CODE_EXPIRATION_HOURS
-from .models import PodcastConfirmation, Podcast, Category
+from .models import PodcastConfirmation, Podcast
 from .utils import send_podcast_confirmation_code_email, verify_podcast_with_listen_notes
 from .serializers import UserPodcastDataSerializer, PodcastSerializer
 
@@ -70,16 +70,11 @@ class PodcastConfirmationView(APIView):
                                                  image_link=image_url,
                                                  confirmation=rss_code_confirmation)
                 for category in feed_data.itunes_categories:
-                    try:
-                        category_entity = Category.objects.get(name=category)
-                    except Category.DoesNotExist:
-                        category_entity = Category(name=category)
-                        category_entity.save()
-                    podcast.categories.add(category_entity)
+                    podcast.categories.create(name=category)
                 podcast.save()
                 return Response(PodcastSerializer(podcast).data, status=status.HTTP_200_OK)
         except AttributeError:
-            raise ParseError('Could not read podcast RSS. Please ensure it is valid and resubmit. It should'
+            raise ParseError('Could not read podcast RSS. Please ensure it is valid and resubmit. It should '
                              'contain a title, description/summary and image link.')
         except PodcastConfirmation.DoesNotExist:
             raise ParseError('Code invalid')
@@ -94,3 +89,5 @@ class UserPodcastView(APIView):
         resp_data = {'podcast_confirmation_pending': podcast_confirmation_pending,
                      'podcasts': Podcast.objects.filter(owner=request.user)}
         return Response(UserPodcastDataSerializer(resp_data).data, status=status.HTTP_200_OK)
+
+

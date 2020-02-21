@@ -1,6 +1,6 @@
+from rest_framework import status, permissions, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status, permissions
 from rest_framework.exceptions import ParseError, UnsupportedMediaType
 from django.utils import timezone
 from datetime import timedelta, datetime
@@ -8,10 +8,10 @@ from smtplib import SMTPException
 import pyPodcastParser.Podcast
 import requests
 
-from .permissions import AddRssConfirmationPermissions, RSS_CODE_EXPIRATION_HOURS
-from .models import PodcastConfirmation, Podcast
+from .permissions import AddRssConfirmationPermissions, PublishingLinksPermissions, RSS_CODE_EXPIRATION_HOURS
+from .models import PodcastConfirmation, Podcast, PodcastPublishingLinks
 from .utils import send_podcast_confirmation_code_email, verify_podcast_with_listen_notes
-from .serializers import UserPodcastDataSerializer, PodcastSerializer
+from .serializers import UserPodcastDataSerializer, PodcastSerializer, PodcastPublishingLinksSerializer
 
 
 class RssFeedConfirmationRequestView(APIView):
@@ -91,3 +91,23 @@ class UserPodcastView(APIView):
         return Response(UserPodcastDataSerializer(resp_data).data, status=status.HTTP_200_OK)
 
 
+class PodcastLinksView(APIView):
+    queryset = PodcastPublishingLinks.objects.all()
+    permission_classes = (PublishingLinksPermissions,)
+    serializer_class = PodcastPublishingLinksSerializer
+
+    def get_object(self, pk):
+        return PodcastPublishingLinks.objects.get(pk=pk)
+
+    def post(self, request):
+        self.check_permissions(request)
+        pk = int(request.data.get('id', -1))
+        if pk < -1:
+            raise ParseError("Wrong parameters")
+        links_model = self.get_object(pk)
+        self.check_object_permissions(request, links_model)
+        serializer = PodcastPublishingLinksSerializer(links_model, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        raise ParseError("Wrong parameters")

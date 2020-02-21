@@ -18,3 +18,11 @@ class AddRssConfirmationPermissions(permissions.BasePermission):
                 .filter(pending=True, created_at__gte=confirmation_expired_time, owner=request.user).count() > 0:
             raise PermissionDenied('You can\'t have more than one podcast confirmation pending at one time')
         return True
+
+
+class PublishingLinksPermissions(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+        return request.user == obj.podcast.owner

@@ -1,4 +1,4 @@
-from datetime import date, timedelta, datetime
+from datetime import date, datetime
 from django.core.mail import send_mail
 from rest_framework import exceptions
 
@@ -20,7 +20,14 @@ def get_applications_sent_this_month_by_user(user):
 
 def send_application(application, guest_post):
     message = 'A user has just applied to speak on your podcast via CastSpot! Here are their details: \n'
-    message += f'Host of the following show: {Podcast.objects.filter(owner=application.applicant)[0].title} \n'
+    podcast = Podcast.objects.filter(owner=application.applicant)[0]
+    message += f'Host of the following show: {podcast.title} \n'
+    if len(podcast.publishing_links.spotfy) > 0:
+        message += f'Spotify: {podcast.publishing_links.spotfy} \n'
+    if len(podcast.publishing_links.apple_podcast) > 0:
+        message += f'Apple Podcast: {podcast.publishing_links.apple_podcast} \n'
+    if len(podcast.publishing_links.website) > 0:
+        message += f'Website: {podcast.publishing_links.website} \n'
     message += 'They left the following information that you can contact them with: \n'
     try:
         contact_details = ContactDetails.objects.filter(owner=application.applicant)[0]
@@ -35,7 +42,7 @@ def send_application(application, guest_post):
     message += 'You already found the perfect guest or are simply sick of receiving these emails? Use this link to ' \
                'to unpublish your post: '
     # TODO: change this for deploy
-    message += f'http://localhost:3000/delete-post/{guest_post.id}'
+    message += f'castspot.onrender.com/delete-post/{guest_post.id}'
     send_mail('You got a new Guest Speaking Application!',
               message,
               'castspot.noreply@gmail.com',

@@ -10,6 +10,9 @@ from .pagination import GuestPostPagination
 from .utils import get_applications_sent_this_month_by_user, send_application
 
 
+DAYS_TILL_POST_EXPIRATION = 31
+
+
 class GuestPostViewSet(viewsets.ViewSet,
                        viewsets.generics.ListCreateAPIView,
                        viewsets.mixins.RetrieveModelMixin):
@@ -26,7 +29,8 @@ class GuestPostViewSet(viewsets.ViewSet,
             except:
                 raise exceptions.PermissionDenied('Not authorized!')
         else:
-            filter_qs = filter_qs.filter(is_active=True, created_at__gte=datetime.now() - timedelta(days=31))
+            filter_qs = filter_qs.filter(is_active=True,
+                                         created_at__gte=datetime.now() - timedelta(days=DAYS_TILL_POST_EXPIRATION))
         queryset = self.filter_queryset(filter_qs)
         try:
             page = self.paginate_queryset(queryset)

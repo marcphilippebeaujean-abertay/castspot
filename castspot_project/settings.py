@@ -9,11 +9,9 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True if os.environ.get('IS_PROD') == 'FALSE' else False
 
-ALLOWED_HOSTS = [
-    '*' if os.environ.get('IS_PROD') == 'FALSE' else '',
-    os.environ.get('DJANGO_ALLOWED_HOSTS', default='castspot.onrender.com')
-]
-
+ALLOWED_HOSTS = ['*'] if os.environ.get('IS_PROD') == 'FALSE' else ['castspot.onrender.com',
+                                                                    'castspot.io',
+                                                                    'www.castspot.io']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

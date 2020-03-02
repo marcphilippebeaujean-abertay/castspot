@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "73cd248bb45aae01806d55c48026c5d5",
+    "revision": "8e7ae8712b2db5ab8c498e8c18da242f",
     "url": "/index.html"
   },
   {
-    "revision": "c0b10b38026fc02a01d9",
+    "revision": "ba9aa3739cf6e99d8ad0",
     "url": "/static/css/main.12864a44.chunk.css"
   },
   {
@@ -12,16 +12,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/js/2.bc3e0b32.chunk.js"
   },
   {
-    "revision": "c0b10b38026fc02a01d9",
-    "url": "/static/js/main.c0fbe19e.chunk.js"
+    "revision": "ba9aa3739cf6e99d8ad0",
+    "url": "/static/js/main.573f0b1d.chunk.js"
   },
   {
     "revision": "c8a5fe2d9b376474e71e",
     "url": "/static/js/runtime-main.5260fa24.js"
   },
   {
-    "revision": "e35566a491c84815f582a57e02a1132c",
-    "url": "/static/media/logo.e35566a4.png"
+    "revision": "676a84f8319658d7e79a0d28ba1446fa",
+    "url": "/static/media/logo_castspot.676a84f8.svg"
   },
   {
     "revision": "5818b08f4bf224bd8defb781e04eec85",

@@ -83,7 +83,9 @@ class TestRssFeedConfirmationRequest(TestCase):
         response = requests.get('http://feeds.backtracks.fm/feeds/indiehackers/indiehackers/feed.xml?1530230413')
         rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
         verify_podcast_with_listen_notes(rss_feed_parser)
-
+        response = requests.get('https://feeds.captivate.fm/podcast-pontifications/')
+        rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
+        verify_podcast_with_listen_notes(rss_feed_parser)
         # TODO: figure out what to do here cause cors is enabled
         #response = requests.get('https://softwareengineeringdaily.com/feed/podcast/')
         #rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)

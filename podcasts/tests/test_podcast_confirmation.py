@@ -66,3 +66,16 @@ class TestPodcastConfirmation(TestCase):
         force_authenticate(request, user=self.user)
         response = self.view(request)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_podcast_already_exists(self):
+        confirmation = PodcastConfirmation.objects.create(owner=self.user,
+                                                          rss_feed_url=JUNIOR_DEV_PODCAST_FEED_URL,
+                                                          rss_confirmation_code=self.valid_confirmation_code)
+        Podcast.objects.create(owner=self.user,
+                               title='The Junior Developer Podcast',
+                               image_link='lol.com',
+                               confirmation=confirmation)
+        request = self.factory.post(self.request_url, self.valid_confirmation_code_data, format='json')
+        force_authenticate(request, user=self.user)
+        response = self.view(request)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

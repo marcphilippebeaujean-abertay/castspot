@@ -1,7 +1,7 @@
-from rest_framework import status, permissions, viewsets
+from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import ParseError, UnsupportedMediaType
+from rest_framework.exceptions import ParseError, UnsupportedMediaType, PermissionDenied
 from django.utils import timezone
 from datetime import timedelta, datetime
 from smtplib import SMTPException
@@ -64,6 +64,8 @@ class PodcastConfirmationView(APIView):
             else:
                 response = requests.get(rss_code_confirmation.rss_feed_url)
                 feed_data = pyPodcastParser.Podcast.Podcast(response.content)
+                if Podcast.objects.filter(title=feed_data.title).count() > 0:
+                    return Response(status=status.HTTP_403_FORBIDDEN)
                 image_url = feed_data.image_link if feed_data.image_link is not None else feed_data.itune_image
                 podcast = Podcast.objects.create(owner=request.user,
                                                  title=feed_data.title,

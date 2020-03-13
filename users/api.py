@@ -1,6 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from django.contrib.auth.models import User
 
 from podcasts.models import Podcast
@@ -27,6 +30,8 @@ class AccountDetailsView(APIView):
 class UserContactDetailsView(APIView):
     permission_classes = (permissions.IsAuthenticated,)
 
+    @method_decorator(cache_page(60 * 60 * 2))
+    @method_decorator(vary_on_cookie)
     def get(self, request):
         owner = User.objects.get(username=request.user)
         contact_information, _ = ContactDetails.objects.get_or_create(owner=owner, defaults={'email': owner.email})

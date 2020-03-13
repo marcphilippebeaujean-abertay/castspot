@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-fi ! ./util_scripts/build_frontend/build_frontend.sh; then
+if ! ./util_scripts/build_frontend/build_frontend.sh; then
   echo "Frontend build failed."
   exit 1
 fi

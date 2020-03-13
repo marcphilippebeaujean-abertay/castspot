@@ -23,7 +23,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    'frontend.apps.FrontendConfig',
     'users.apps.UsersConfig',
     'podcasts.apps.PodcastsConfig',
     'guest_posting.apps.GuestPostingConfig',

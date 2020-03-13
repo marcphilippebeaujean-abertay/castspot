@@ -4,7 +4,7 @@ if ! ./util_scripts/build_frontend/build_frontend.sh; then
   exit 1
 fi
 pip install -r requirements.txt
-if ! yes | python manage.py test; then
+if ! yes yes | python manage.py test; then
   echo "Tests failed."
   exit 1
 fi

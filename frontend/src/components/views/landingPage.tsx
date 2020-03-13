@@ -222,7 +222,7 @@ export default () => {
           <div className="pt-4 pb-4 mt-4 mb-4" />
         </Container>
       </Section>
-      <div className="pd-mb-4 pd-mt-4" />
+      <div className="d-block d-md-none pd-mb-4 pd-mt-4" />
       <SectionMainBg>
         <Container id="benefits-container" className="pb-4 pt-4">
           <h2 className="text-center pt-4">
@@ -334,8 +334,7 @@ export default () => {
                 </Card.Header>
                 <Card.Body>
                   Verify your Podcast - we only let real hosts interact with
-                  others on the site and don't tolerate catfishing, spamming and
-                  trolling (unless of course, you podcast about these things).
+                  others on the site.
                 </Card.Body>
               </CardOnPurpleBg>
             </Col>
@@ -349,8 +348,7 @@ export default () => {
                   <p className="mb-0">
                     Create a new guest speaking opportunity that other users can
                     apply to. Simply mention what type of topic you want your
-                    upcoming episode to cover and start receiving applications
-                    from other users wanting to collaborate.
+                    upcoming episode to cover.
                   </p>
                 </Card.Body>
               </CardOnPurpleBg>
@@ -363,10 +361,10 @@ export default () => {
                 </Card.Header>
                 <Card.Body>
                   <p className="mb-0">
-                    Simply update your contact details and apply to open guest
+                    Update your contact details and apply to open guest
                     speaking opportunities in two clicks. Your details are
                     shared with the host (but nobody else), so they can get in
-                    touch with you.{" "}
+                    touch with you.
                   </p>
                 </Card.Body>
               </CardOnPurpleBg>

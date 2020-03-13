@@ -1,0 +1,96 @@
+[
+  {
+    "model": "podcasts.podcastconfirmation",
+    "pk": 6,
+    "fields": {
+      "owner": 2,
+      "created_at": "2019-12-28T20:28:49.125",
+      "rss_feed_url": "ssssssss",
+      "rss_confirmation_code": "HELLOPOL",
+      "pending": false
+    }
+  },
+  {
+    "model": "podcasts.podcastconfirmation",
+    "pk": 7,
+    "fields": {
+      "owner": 3,
+      "created_at": "2019-12-28T20:28:49.125",
+      "rss_feed_url": "ssssssss",
+      "rss_confirmation_code": "HELLOPOL",
+      "pending": false
+    }
+  },
+  {
+    "model": "podcasts.podcast",
+    "pk": 2,
+    "fields": {
+      "owner": 3,
+      "title": "JRE Podcast",
+      "description": "the show about joe",
+      "image_link": "https://cdn-images-1.listennotes.com/podcasts/the-joe-rogan-experience-joe-rogan-gry8jbiWKA1-s_ML5QqPi0v.1400x1400.jpg",
+      "site_link": "helloworld",
+      "confirmation": 7
+    }
+  },
+  {
+    "model": "podcasts.podcast",
+    "pk": 3,
+    "fields": {
+      "owner": 2,
+      "title": "Indie Hackers",
+      "description": "the show about joe",
+      "image_link": "https://is5-ssl.mzstatic.com/image/thumb/Podcasts123/v4/ea/a6/7e/eaa67ecf-bf4b-4d01-d1e4-600180ec9393/mza_6971347381622250290.jpg/400x400bb.jpg",
+      "site_link": "helloworld",
+      "confirmation": 6
+    }
+  },
+  {
+    "model": "guest_posting.guestpost",
+    "pk": "a4333c5b-5aab-44e3-8f39-cblf6bbb21ca",
+    "fields": {
+      "owner": 2,
+      "podcast": 3,
+      "heading": "Scaling an Indie Business via Email Marketing",
+      "description": "description",
+      "is_active": true,
+      "created_at": "2020-01-02T20:52:12.524"
+    }
+  },
+  {
+    "model": "guest_posting.guestpost",
+    "pk": "a4333c5b-5ccb-44e3-8f39-cbaf6bbb21ca",
+    "fields": {
+      "owner": 2,
+      "podcast": 3,
+      "heading": "Staying motivated as a Founder",
+      "description": "description",
+      "is_active": true,
+      "created_at": "2020-01-02T20:52:12.524"
+    }
+  },
+  {
+    "model": "guest_posting.guestpost",
+    "pk": "a4333c4b-5aab-44e3-8f39-cbaf6bbb31ca",
+    "fields": {
+      "owner": 3,
+      "podcast": 2,
+      "heading": "Sober October",
+      "description": "description",
+      "is_active": true,
+      "created_at": "2020-01-02T20:52:12.524"
+    }
+  },
+  {
+    "model": "guest_posting.guestpost",
+    "pk": "a5633c4b-5aab-44e3-8f39-cbaf6bbb31ca",
+    "fields": {
+      "owner": 3,
+      "podcast": 2,
+      "heading": "Artificial Intelligence and Universal Basic Income",
+      "description": "description",
+      "is_active": true,
+      "created_at": "2020-01-02T20:52:12.524"
+    }
+  }
+]

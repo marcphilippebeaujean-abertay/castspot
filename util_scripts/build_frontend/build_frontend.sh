@@ -1,12 +1,10 @@
 #!/bin/bash
 
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-PROJECTS_DIR_PATH=/home/marc/projects
-FRONTEND_PROJECT_DIR_PATH="${PROJECTS_DIR_PATH}/castspot_frontend"
-BACKEND_PROJECT_DIR_PATH="${PROJECTS_DIR_PATH}/castspot"
-BACKEND_STATIC_FOLDER="${BACKEND_PROJECT_DIR_PATH}/static"
+PROJECT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../.." >/dev/null 2>&1 && pwd )"
+FRONTEND_PROJECT_DIR_PATH="${PROJECT_DIR_PATH}/frontend"
 
-cd $FRONTEND_PROJECT_DIR_PATH || exit 1
+cd "${FRONTEND_PROJECT_DIR_PATH}" || exit 1
 yarn build
-python "${DIR}/move_files.py"
-python "${DIR}/sanitise_index_html.py"
+# shellcheck disable=SC2164
+cd "${PROJECT_DIR_PATH}"
+python "${PROJECT_DIR_PATH}/util_scripts/build_frontend/move_files.py"

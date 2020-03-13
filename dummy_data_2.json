@@ -1,0 +1,26 @@
+[
+  {
+    "model": "guest_posting.guestpost",
+    "pk": "a5643c4b-5aab-4553-8f39-cbaf6bbb31ca",
+    "fields": {
+      "owner": 2,
+      "podcast": 3,
+      "heading": "Working on Side Projects Part-Time",
+      "description": "description",
+      "is_active": true,
+      "created_at": "2020-01-02T20:52:12.524"
+    }
+  },
+  {
+    "model": "guest_posting.guestpost",
+    "pk": "a5633c4b-5aab-4553-8f39-cbaf6bbb31ca",
+    "fields": {
+      "owner": 3,
+      "podcast": 2,
+      "heading": "Escaping the 9 to 5",
+      "description": "description",
+      "is_active": true,
+      "created_at": "2020-01-02T20:52:12.524"
+    }
+  }
+]

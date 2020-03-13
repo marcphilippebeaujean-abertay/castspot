@@ -35,7 +35,6 @@ __pycache__/
 .Python
 venv/
 env/
-build/
 develop-eggs/
 dist/
 downloads/
@@ -83,11 +82,10 @@ target/
 *.pyc
 local_settings.py
 migrations/
+static/
 
 .env
 
-# frontend
+# Frontend
 build/
 node_modules/
-public/
-*.json

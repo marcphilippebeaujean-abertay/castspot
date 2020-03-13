@@ -1,0 +1,54 @@
+@import "./variables";
+@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+
+.btn-primary:hover {
+  background-color: $primary-hover-color !important;
+}
+
+.st-link {
+  color: #0275d8 !important;
+}
+
+.st-link:hover {
+  color: #0275d8 !important;
+}
+
+.st-link:visited {
+  color: purple !important;
+}
+
+.arrow-btn {
+  position: relative;
+  animation-name: arrowAnim;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.68, 0.99, 1.55, -0.26);
+}
+
+.arrow-btn:hover {
+  cursor: pointer;
+  color: $primary-hover-color;
+}
+
+img {
+  animation-name: fadeIn;
+  animation-duration: 0.3s;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes arrowAnim {
+  from {
+    top: 0;
+  }
+  to {
+    top: 5px;
+  }
+}

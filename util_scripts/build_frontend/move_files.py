@@ -2,10 +2,10 @@ import os.path
 import shutil
 
 
-backend_dir = os.path.join("/home", "marc", "projects", "castspot")
+backend_dir = os.path.join(os.getcwd(), os.pardir, os.pardir)
 backend_static_dir = os.path.join(backend_dir, "static")
 backend_templates_dir = os.path.join(backend_dir, "templates")
-frontend_build_dir = os.path.join("/home", "marc", "projects", "castspot_frontend", "build")
+frontend_build_dir = os.path.join(backend_dir, "frontend", "build")
 
 backend_index_file = (os.path.join(backend_templates_dir, "index.html"))
 if os.path.isfile(backend_index_file):

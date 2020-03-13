@@ -22,8 +22,8 @@ def send_application(application, guest_post):
     message = 'A user has just applied to speak on your podcast via CastSpot! Here are their details: \n'
     podcast = Podcast.objects.filter(owner=application.applicant)[0]
     message += f'Host of the following show: {podcast.title} \n'
-    if len(podcast.publishing_links.spotfy) > 0:
-        message += f'Spotify: {podcast.publishing_links.spotfy} \n'
+    if len(podcast.publishing_links.spotify) > 0:
+        message += f'Spotify: {podcast.publishing_links.spotify} \n'
     if len(podcast.publishing_links.apple_podcast) > 0:
         message += f'Apple Podcast: {podcast.publishing_links.apple_podcast} \n'
     if len(podcast.publishing_links.website) > 0:

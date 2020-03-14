@@ -6,5 +6,4 @@ FRONTEND_PROJECT_DIR_PATH="${PROJECT_DIR_PATH}/frontend"
 cd "${FRONTEND_PROJECT_DIR_PATH}" || exit 1
 yarn install
 yarn build
-cd "${PROJECT_DIR_PATH}"
 python "${PROJECT_DIR_PATH}/util_scripts/build_frontend/move_files.py"

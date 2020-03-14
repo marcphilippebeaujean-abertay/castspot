@@ -2,7 +2,8 @@ import os.path
 import shutil
 
 
-backend_dir = os.path.join(os.getcwd(), os.pardir, os.pardir)
+backend_dir = os.path.join(os.getcwd(), '..')
+print(backend_dir)
 backend_static_dir = os.path.join(backend_dir, "static")
 backend_templates_dir = os.path.join(backend_dir, "templates")
 frontend_build_dir = os.path.join(backend_dir, "frontend", "build")
@@ -13,7 +14,7 @@ if os.path.isfile(backend_index_file):
 frontend_index_file = (os.path.join(frontend_build_dir, "index.html"))
 if os.path.isfile(frontend_index_file):
     shutil.move(frontend_index_file, backend_templates_dir)
-if os.path.isdir(os.path.join(frontend_build_dir)):
+if os.path.isdir(frontend_build_dir):
     backend_static_folder = os.path.join(backend_dir, "static")
     shutil.rmtree(backend_static_folder, ignore_errors=True)
     os.mkdir(backend_static_folder)

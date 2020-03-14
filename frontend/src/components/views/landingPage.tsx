@@ -361,10 +361,9 @@ export default () => {
                 </Card.Header>
                 <Card.Body>
                   <p className="mb-0">
-                    Update your contact details and apply to open guest
-                    speaking opportunities in two clicks. Your details are
-                    shared with the host (but nobody else), so they can get in
-                    touch with you.
+                    Update your contact details and apply to open guest speaking
+                    opportunities in two clicks. Your details are shared with
+                    the host only, so they can get in touch with you.
                   </p>
                 </Card.Body>
               </CardOnPurpleBg>

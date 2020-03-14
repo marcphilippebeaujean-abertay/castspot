@@ -7,7 +7,7 @@ import FunctionalityRoutes from "./views/bodyRoutes";
 import NavBar from "./navigation/navMenu";
 import AlertsContainer from "./alerting/alertsContainer";
 import SessionChecker from "./utils/sessionChecker";
-import LandingPage from "./views/landingPage";
+import LandingPage from "./views/landingPage/landingPage";
 import Footer, { footerHeight } from "./footer";
 import ScrollToTopOnRouteChange from "./utils/scrollToTopOnRouteChange";
 import FAQSection, { faqLink } from "./views/faq/faqSection";

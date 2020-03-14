@@ -6,12 +6,13 @@ import styled from "styled-components";
 import * as Io from "react-icons/io";
 import * as Fa from "react-icons/fa";
 
-import IconWrapper from "../utils/elementWrappers/IconWrapper";
-import PodcastSVG from "../../images/undraw_podcast_q6p7.svg";
-import SecuritySVG from "../../images/undraw_security_o890.svg";
-import Logo from "../../images/logo_castspot.svg";
-import { register } from "./userAccess/userAccessLinks";
-import { themeColour } from "../../constants/style";
+import IconWrapper from "../../utils/elementWrappers/IconWrapper";
+import PodcastSVG from "../../../images/undraw_podcast_q6p7.svg";
+import SecuritySVG from "../../../images/undraw_security_o890.svg";
+import Logo from "../../../images/logo_castspot.svg";
+import Carousel from "./carousel";
+import { register } from "../userAccess/userAccessLinks";
+import { themeColour } from "../../../constants/style";
 
 const Banner = styled.div`
   #logo {
@@ -225,6 +226,13 @@ export default () => {
       <div className="d-block d-md-none pd-mb-4 pd-mt-4" />
       <SectionMainBg>
         <Container id="benefits-container" className="pb-4 pt-4">
+          <h2 className="text-center pt-4">Who is using CastSpot?</h2>
+          <div className="pb-md-4 pt-md-4"></div>
+          <Carousel />
+        </Container>
+      </SectionMainBg>
+      <SectionMainBg>
+        <Container id="benefits-container" className="pb-4 pt-4">
           <h2 className="text-center pt-4">
             Why Podcasters are the best Guests
           </h2>
@@ -361,10 +369,10 @@ export default () => {
                 </Card.Header>
                 <Card.Body>
                   <p className="mb-0">
-                    Update your contact details and apply to open guest
-                    speaking opportunities in two clicks. Your details are
-                    shared with the host (but nobody else), so they can get in
-                    touch with you.
+                    Update your contact details and apply to open guest speaking
+                    opportunities in two clicks. Your details are shared with
+                    the host (but nobody else), so they can get in touch with
+                    you.
                   </p>
                 </Card.Body>
               </CardOnPurpleBg>

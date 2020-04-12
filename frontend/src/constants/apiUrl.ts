@@ -21,6 +21,7 @@ export const API_INIT_RSS_FEED_CONFIRM = API_URL + "rss-feed-confirmation/";
 export const API_PODCAST_CONFIRMATION = API_URL + "podcast-confirmation/";
 export const API_GET_USER_PODCAST_DATA = API_URL + "podcast-user-data/";
 export const API_UPDATE_PUBLICATION_LINKS = API_URL + `publishing-links/`;
+export const API_PODCAST_LISTENNOTES = API_URL + `podcast-listennotes-search/`;
 
 export const API_USER_CONTACT_DETAILS_VIEW = API_URL + "user-contact-details/";
 

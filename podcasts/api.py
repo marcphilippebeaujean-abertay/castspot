@@ -1,7 +1,7 @@
 from rest_framework import status, permissions
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import ParseError, UnsupportedMediaType, PermissionDenied
+from rest_framework.exceptions import ParseError, UnsupportedMediaType
 from django.utils import timezone
 from datetime import timedelta, datetime
 from smtplib import SMTPException
@@ -80,6 +80,23 @@ class PodcastConfirmationView(APIView):
                              'contain a title, description/summary and image link.')
         except PodcastConfirmation.DoesNotExist:
             raise ParseError('Code invalid')
+
+
+class PodcastListenNotesSearchView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get(self, request):
+        self.check_permissions(request)
+        search_term = request.data.get('search_term', None)
+        if search_term is None:
+            raise ParseError('Search term missing!')
+        url = f'https://listen-api.listennotes.com/api/v2/search?{search_term}&type=podcast&only_in=title'
+        headers = {
+            'X-ListenAPI-Key': '85d6c128b6cf4c88b17b850effb29d6b',
+        }
+        response = requests.request('GET', url, headers=headers)
+        response_data = response.json()['results'][:10] if 'results' in response.json() else []
+        return Response(response_data, status=response.status_code)
 
 
 class UserPodcastView(APIView):

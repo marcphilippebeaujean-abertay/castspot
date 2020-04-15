@@ -3,9 +3,10 @@ export const INCREMENT_POSTS_MADE = "postCreated";
 export const INCREMENT_APPLICATIONS_MADE = "applicationCreated";
 export const RESET_POSTING_STATE = "resetPostingState";
 export const CONFIRM_USER_VIEWED_CONTACTS = "confirmUserViewedContacts";
+export const CONFIRM_USER_IS_PODCASTER = "confirmUserIsPodcaster";
 
 export interface UserPostingState {
-  isVerifiedPodcaster: null;
+  isVerifiedPodcaster: boolean | null;
   hasCreatedContactDetails: boolean | null;
   postsThisMonth: number | null;
   applicationsThisMonth: number | null;
@@ -30,4 +31,8 @@ export interface ResetPostingState {
 
 export interface ConfirmUserViewedContacts {
   type: typeof CONFIRM_USER_VIEWED_CONTACTS;
+}
+
+export interface ConfirmUserIsPodcaster {
+  type: typeof CONFIRM_USER_IS_PODCASTER;
 }

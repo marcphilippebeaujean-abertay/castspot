@@ -14,6 +14,7 @@ export default (
     | types.IncrementPostsThisMonth
     | types.SetUserPostingState
     | types.ConfirmUserViewedContacts
+    | types.ConfirmUserIsPodcaster
 ): types.UserPostingState => {
   switch (action.type) {
     case types.SET_USER_POSTING_STATE:
@@ -34,6 +35,11 @@ export default (
       return {
         ...previousState,
         hasCreatedContactDetails: true
+      };
+    case types.CONFIRM_USER_IS_PODCASTER:
+      return {
+        ...previousState,
+        isVerifiedPodcaster: true
       };
   }
   return previousState;

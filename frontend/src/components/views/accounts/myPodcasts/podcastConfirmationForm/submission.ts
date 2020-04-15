@@ -7,6 +7,7 @@ import {
 } from "../../../../utils/formUtils";
 import { API_PODCAST_CONFIRMATION } from "../../../../../constants/apiUrl";
 import { addUserPodcast } from "../../../../../state/userPodcastsState/userPodcastsActions";
+import { confirmUserIsPodcaster } from "../../../../../state/userPostingState/actions";
 import {
   setLoadingAlertVisibility,
   setSuccessAlerts
@@ -47,6 +48,7 @@ export default (
     })
     .then(response => {
       reduxActionDispatch(addUserPodcast(response.data));
+      reduxActionDispatch(confirmUserIsPodcaster());
       reduxActionDispatch(
         setSuccessAlerts(["Added new Podcast to your Account"])
       );

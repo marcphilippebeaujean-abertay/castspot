@@ -36,6 +36,12 @@ export const confirmUserViewedContacts = (): types.ConfirmUserViewedContacts => 
   };
 };
 
+export const confirmUserIsPodcaster = (): types.ConfirmUserIsPodcaster => {
+  return {
+    type: types.CONFIRM_USER_IS_PODCASTER
+  };
+};
+
 export const fetchUserPostingState = (authToken: string | null) => {
   return async (dispatch: Function) => {
     if (authToken !== null) {

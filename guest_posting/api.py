@@ -23,7 +23,6 @@ class GuestPostViewSet(viewsets.ViewSet,
     queryset = GuestPost.objects.all()
     pagination_class = GuestPostPagination
 
-    @method_decorator(cache_page(60 * 60 * 2))
     def list(self, request, *args, **kwargs):
         filter_qs = GuestPost.objects.order_by('created_at').reverse()
         if request.GET.get('showUserPosts', False):

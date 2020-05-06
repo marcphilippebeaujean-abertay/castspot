@@ -12,7 +12,7 @@ import {
 import * as fieldnames from "./fieldnames";
 import { messageMaxCharacters } from "./form";
 import { API_SPEAKING_APPLICATION } from "../../../../../constants/apiUrl";
-import { incrementPostThisMonth } from "../../../../../state/userPostingState/actions";
+import { incrementApplicationsThisMonth } from "../../../../../state/userPostingState/actions";
 import { generatePostButtonId } from "../post";
 
 export default (
@@ -43,7 +43,7 @@ export default (
     axios
       .post(
         API_SPEAKING_APPLICATION,
-        { guestPostId: postUuid },
+        { guestPostId: postUuid, applicationMessage: "" + applicationMessage },
         {
           headers: { Authorization: `Token ${authToken}` }
         }
@@ -51,15 +51,14 @@ export default (
       .then(response => {
         reduxActionDispatch(
           setSuccessAlerts([
-            `You have applied to the post! You have ${response.data.remainingApplications} applications left for the month!`
+            `You have applied to the post!`
           ])
         );
-        reduxActionDispatch(incrementPostThisMonth());
-        toggleSubmitButton(fieldnames.SUBMIT);
-        const buttonId = generatePostButtonId(postUuid);
-        (document.getElementById(buttonId) as HTMLElement).innerHTML =
-          "<p>Already Applied!</p>";
+        reduxActionDispatch(incrementApplicationsThisMonth());
         closeOverlay();
+        /*const buttonId = generatePostButtonId(postUuid);
+        (document.getElementById(buttonId) as HTMLElement).innerHTML =
+          "<p>Already Applied!</p>";*/
       })
       .catch((error: any) => {
         displaySingleErrorMessageInErrorDiv(

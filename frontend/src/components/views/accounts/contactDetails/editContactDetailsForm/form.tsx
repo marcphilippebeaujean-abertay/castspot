@@ -11,7 +11,7 @@ import {
   SKYPE_FIELD_HEADER
 } from "../fieldHeaders";
 import { useUserAuthSelector } from "../../../../../state/typedSelectors";
-import { ContactDetailsState } from "../../../../../state/userContactDetailsState/types";
+import { ContactDetailsState } from "../../../../../state//userContactDetailsState/types";
 import { contactDetailsLink } from "../../accountLinks";
 import { handleInputChange } from "../../../../utils/formUtils";
 import formSubmit from "./submission";

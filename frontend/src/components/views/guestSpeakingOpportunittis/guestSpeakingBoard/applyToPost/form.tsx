@@ -45,7 +45,7 @@ const CreatePostOverlay: FunctionComponent<Props> = props => {
             props.postId,
             dispatch,
             `${authToken}`,
-            () => props.closeOverlayCallback()
+            props.closeOverlayCallback
           );
         }}
       >

@@ -39,7 +39,9 @@ def send_application(application, guest_post):
         message += f'Discord: {contact_details.discord} \n'
     if len(contact_details.skype) > 0:
         message += f'Skype: {contact_details.skype} \n'
-    message += 'You already found the perfect guest or are simply sick of receiving these emails? Use this link to ' \
+    message += 'This was their message: \n'
+    message += f'{application.application_message} \n'
+    message += 'You already found the perfect guest or are simply sick of receiving these emails? Use this link ' \
                'to unpublish your post: '
     # TODO: change this for deploy
     message += f'castspot.onrender.com/delete-post/{guest_post.id}'

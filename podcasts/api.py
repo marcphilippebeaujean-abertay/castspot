@@ -28,8 +28,8 @@ class RssFeedConfirmationRequestView(APIView):
                 raise ParseError('We couldn\'t access your RSS feed. Make sure that it is hosted somewhere that allows'\
                                  'third parties to download it (CORS is not enabled). A common problem is that the link '\
                                  'you uploaded is hosted on WordPress instead of your Podcast Host.')
-            # verify_podcast_with_listen_notes(rss_feed_parser)
             rss_feed_parser = pyPodcastParser.Podcast.Podcast(response.content)
+            verify_podcast_with_listen_notes(rss_feed_parser)
 
             confirmation_code = PodcastConfirmation.objects.create(rss_feed_url=rss_feed_url,
                                                                    owner=request.user).rss_confirmation_code

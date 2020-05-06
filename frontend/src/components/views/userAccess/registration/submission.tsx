@@ -91,9 +91,16 @@ export default (
           ])
         );
       })
-      .catch((error: any) =>
-        displayServerErrorMessagesInErrorDiv(FORM_ERROR_DIV_ID, error.reponse)
-      )
+      .catch((error: any) => {
+        console.log(error);
+        if (error["response"] !== undefined) {
+          displayServerErrorMessagesInErrorDiv(
+            FORM_ERROR_DIV_ID,
+            error.response.data
+          );
+          toggleSubmitButton(SUBMIT);
+        }
+      })
       .finally(() =>
         reduxActionDispatch(setLoadingAlertVisibility("finishing"))
       );

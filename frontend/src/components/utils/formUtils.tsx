@@ -56,11 +56,16 @@ export const displayInputErrorMessages = (
 
 export const displayServerErrorMessagesInErrorDiv = (
   errorDivId: string,
-  errorData: Array<String>
+  errorData: any
 ) => {
   const responseErrorMessages = document.getElementById(
     errorDivId
   ) as HTMLElement;
+  if (responseErrorMessages === null) {
+    console.log("couldnt find error div");
+    return;
+  }
+  console.log(errorData);
   for (let errorKey in errorData) {
     responseErrorMessages.insertAdjacentHTML(
       "afterbegin",

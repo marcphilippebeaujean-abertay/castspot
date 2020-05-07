@@ -149,7 +149,6 @@ export default () => {
               Keep your Contact Details private
             </li>
           </FeatureList>
-          <a href="https://www.producthunt.com/posts/castspot?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-castspot" target="_blank" style={{ display: "block", margin: "10px auto 30px auto" }}><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=198074&theme=light" alt="CastSpot - Podcasters-only networking platform! Speak on other's shows. | Product Hunt Embed" style={{ width: "250px", height: "54px" }} /></a>
           <ConversionButton
             className="ml-auto mr-auto"
             onClick={() => dispatch(push(register.link))}

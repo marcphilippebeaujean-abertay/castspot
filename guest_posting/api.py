@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 from datetime import datetime, timedelta
 
 from .models import GuestPost, GuestSpeakingApplication
@@ -23,6 +24,8 @@ class GuestPostViewSet(viewsets.ViewSet,
     queryset = GuestPost.objects.all()
     pagination_class = GuestPostPagination
 
+    @method_decorator(cache_page(60*60*2))
+    @method_decorator(vary_on_cookie)
     def list(self, request, *args, **kwargs):
         filter_qs = GuestPost.objects.order_by('created_at').reverse()
         if request.GET.get('showUserPosts', False):

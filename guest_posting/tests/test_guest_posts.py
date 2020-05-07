@@ -7,7 +7,7 @@ import datetime
 
 from podcasts.models import Podcast, PodcastConfirmation
 
-from guest_posting.api import GuestPostViewSet, GuestSpeakingApplication
+from guest_posting.api import GuestPostViewSet, GuestSpeakingApplication, DAYS_TILL_POST_EXPIRATION
 from guest_posting.models import GuestPost
 from guest_posting.permissions import POSTS_PER_MONTH
 
@@ -40,7 +40,7 @@ class Test(TestCase):
                                  description='This a podcast by another user.')
         self.old_post = GuestPost.objects.create(owner=self.user2, podcast=other_user_podcast, heading='Podcast for other users',
                                  description='This is an old post.')
-        self.old_post.created_at = datetime.datetime.now() - datetime.timedelta(days=32)
+        self.old_post.created_at = datetime.datetime.now() - datetime.timedelta(days=DAYS_TILL_POST_EXPIRATION)
         self.old_post.save()
 
     def test_get_first_page_guest_posts(self):

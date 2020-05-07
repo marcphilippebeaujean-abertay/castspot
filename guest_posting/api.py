@@ -12,7 +12,7 @@ from .pagination import GuestPostPagination
 from .utils import get_applications_sent_this_month_by_user, send_application
 
 
-DAYS_TILL_POST_EXPIRATION = 31
+DAYS_TILL_POST_EXPIRATION = 120
 
 
 class GuestPostViewSet(viewsets.ViewSet,
